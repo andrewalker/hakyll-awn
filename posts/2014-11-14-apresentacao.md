@@ -20,12 +20,12 @@ técnica.
 
 Em seguida, irei fazer algumas postagens explicando alguns pontos interessantes
 sobre a experiência destes últimos dias com a [re] construção do site. Estou
-utilizando ferramentas fantásticas, como [Hakyll](jaspervdj.be/hakyll/) em
-Haskell, a infraestrutura completa da Amazon, integração contínua com [Travis
-CI](https://travis-ci.org/andrewalker/hakyll-awn), e um repositório público no
-[Github](https://github.com/andrewalker/hakyll-awn). Extremamente *"overkill"*
-para minha necessidade, se considerado meramente o conteúdo a ser publicado,
-mas totalmente relevante se considerado o propósito de aprendizado e
+utilizando ferramentas fantásticas, como [Hakyll](http://jaspervdj.be/hakyll/)
+em Haskell, a infraestrutura completa da Amazon, integração contínua com
+[Travis CI](https://travis-ci.org/andrewalker/hakyll-awn), e um repositório
+público no [Github](https://github.com/andrewalker/hakyll-awn). Extremamente
+*"overkill"* para minha necessidade, se considerado meramente o conteúdo a ser
+publicado, mas totalmente relevante se considerado o propósito de aprendizado e
 demonstração.
 
 Por fim, quero aproveitar este espaço do site para publicar temas diversos que
