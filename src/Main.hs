@@ -7,7 +7,12 @@ import Data.Monoid ((<>), mconcat)
 import Hakyll
 
 main :: IO ()
-main = hakyll rules
+main = hakyllWith config rules
+
+config :: Configuration
+config = defaultConfiguration {
+    deployCommand = "s3cmd sync -P --delete-removed _site/ s3://andrewalker.net"
+}
 
 rules :: Rules ()
 rules = do
