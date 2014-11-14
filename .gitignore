@@ -1,0 +1,10 @@
+/site.hi
+/site.o
+/site
+
+/_cache/
+/_site/
+/dist/
+
+.cabal-sandbox/
+cabal.sandbox.config

@@ -1,0 +1,16 @@
+<div class="pagination">
+$if(previousPageUrl)$
+<a class="prev" href="$previousPageUrl$">← Mais recentes</a>
+$endif$
+
+$if(numPages)$
+Página <span class="page-number">$currentPageNum$</span> de <span class="page-number">$numPages$</span>
+$else$
+&nbsp;
+$endif$
+
+$if(nextPageUrl)$
+<a class="next" href="$nextPageUrl$">Mais antigas →</a>
+$endif$
+</div>
+

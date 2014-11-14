@@ -1,0 +1,19 @@
+<div>
+  <article role="article">
+    <header>
+      <h1 class="entry-title">$title$</h1>
+    </header>
+    <div id="blog-archives">
+      $for(posts)$
+          <article>
+              <h1><a href="$url$">$title$</a></h1>
+              <time datetime="$date_full$" pubdate>
+                  <span class='month'>$date_month$</span>
+                  <span class='day'>$date_day$</span>
+                  <span class='year'>$date_year$</span>
+              </time>
+          </article>
+      $endfor$
+    </div>
+  </article>
+</div>

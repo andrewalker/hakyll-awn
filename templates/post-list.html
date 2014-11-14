@@ -1,0 +1,18 @@
+$for(posts)$
+    <article>
+        <header>
+            <h1 class="entry-title"><a href="$url$">$title$</a></h1>
+            <p class="meta">
+                <time>$date$</time>
+              | <a href="$url$#disqus_thread">comentários</a>
+            </p>
+        </header>
+        <div class="entry-content">
+            $teaser$
+        </div>
+        <footer>
+            <a rel="full-article" href="$url$">Continue lendo &rarr;</a>
+        </footer>
+    </article>
+$endfor$
+$partial("templates/pager.html")$
