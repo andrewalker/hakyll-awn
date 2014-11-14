@@ -3,8 +3,6 @@
 ## Código
 
  - Adicionar imagens aos posts (estilo imagem destacada do WordPress)
- - Terminar de configurar / automatizar deploy
- - Testar Travis CI
 
 ## Conteúdo
 
