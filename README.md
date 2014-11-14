@@ -1,5 +1,7 @@
 # andrewalker.net
 
+[![Build Status](https://travis-ci.org/andrewalker/hakyll-awn.svg)](https://travis-ci.org/andrewalker/hakyll-awn)
+
 Este é o código-fonte do meu site pessoal. Deve ir ao ar muito em breve. Por
 enquanto, estou apenas criando as páginas e o programando em Haskell \o/
 
