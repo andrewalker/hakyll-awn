@@ -8,7 +8,6 @@
 
  - Criar conteúdo da página Sobre
  - Criar conteúdo da página Contato
- - Criar tagline
  - Posts:
     - Apresentação do blog
     - Conhecendo Hakyll/Haskell
