@@ -18,6 +18,8 @@ config = defaultConfiguration {
 
 rules :: Rules ()
 rules = do
+    deploymentId <- preprocess getDeploymentId
+
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -38,22 +40,23 @@ rules = do
     -- shouldn't be copied.
     match "css/*" $ do
         route idRoute
-        compile $ do
-            getResourceBody
-                >>= saveSnapshot "raw"
+        compile $ getResourceBody >>= saveSnapshot "raw"
 
     create ["style.css"] $ do
-        route idRoute
+        route $ assetsRoute deploymentId
         compile $ do
             items <- loadAllSnapshots "css/*" "raw"
             makeItem $ compressCss $ concat $ map itemBody (items :: [Item String])
 
     match "pages/*" $ do
         route   pagesRoute
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/page.html"    defaultContext
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= relativizeUrls
+        compile $ do
+            let ctx = defaultContext <> constField "deploymentId" (show deploymentId)
+
+            pandocCompiler
+                >>= loadAndApplyTemplate "templates/page.html"    ctx
+                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= relativizeUrls
 
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
 
@@ -64,6 +67,7 @@ rules = do
             posts <- recentFirst =<< loadAll pattern
             let ctx = mconcat
                   [ constField "title" title
+                  , constField "deploymentId" (show deploymentId)
                   , listField "posts" postCtx (return posts)
                   , defaultContext
                   ]
@@ -76,7 +80,10 @@ rules = do
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ do
-            let postCtxWithTags = tagsField "tags" tags <> postCtx
+            let postCtxWithTags =
+                    tagsField "tags" tags <>
+                    constField "deploymentId" (show deploymentId) <>
+                    postCtx
 
             pandocCompiler
                 >>= saveSnapshot "content"
@@ -91,6 +98,7 @@ rules = do
             let archiveCtx = mconcat
                   [ listField "posts" postCtx (return posts)
                   , constField "title" "Arquivo"
+                  , constField "deploymentId" (show deploymentId)
                   , field "tagcloud" (\_ -> renderTagCloud 100 250 (sortTagsBy caseInsensitiveTags tags))
                   , defaultContext
                   ]
@@ -123,6 +131,7 @@ rules = do
             let paginateCtx = paginateContext blog pageNum
             let ctx         = mconcat
                   [ constField "title" "Home"
+                  , constField "deploymentId" (show deploymentId)
                   , listField "posts" (postCtx <> paginateCtx) (return posts)
                   , paginateCtx
                   , defaultContext
@@ -158,6 +167,12 @@ feedConfiguration = FeedConfiguration
     , feedAuthorEmail = "andre+website@andrewalker.net"
     , feedRoot        = "https://andrewalker.net"
     }
+
+getDeploymentId :: IO Integer
+getDeploymentId = round `fmap` getPOSIXTime
+
+assetsRoute :: Integer -> Routes
+assetsRoute id' = customRoute $ ((show id') ++) . toFilePath
 
 pagesRoute :: Routes
 pagesRoute =
