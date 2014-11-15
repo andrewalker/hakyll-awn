@@ -123,24 +123,20 @@ body > div > div {
 }
 
 .heading, body > header h1, h1, h2, h3, h4, h5, h6 {
-  font-family: "Fjalla One", "Georgia", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
+  font-family: "Bree Serif", serif;
 }
 
 .sans, body, body > header h2, article header p.meta, article > footer, #content .blog-index footer, html .gist .gist-file .gist-meta, #blog-archives a.category, #blog-archives time, body > footer {
-  font-family: "Open Sans", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
-}
-
-.serif, #content .blog-index a[rel=full-article] {
-  font-family: "PT Serif", Georgia, Times, "Times New Roman", serif;
+  font-family: Lora, serif;
 }
 
 .mono, pre, code, tt, p code, li code {
-  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", DotumChe, monospace;
+  font-family: Inconsolata, monospace;
 }
 
 body > header h1 {
   font-size: 2.2em;
-  font-family: "Fjalla One", "Georgia", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
+  font-family: "Bubblegum Sans", sans-serif;
   font-weight: normal;
   line-height: 1.2em;
   margin-bottom: 0.6667em;
@@ -666,7 +662,7 @@ body > nav form {
 }
 body > nav form .search {
   font-size: .85em;
-  font-family: "Open Sans", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
+  font-family: Lora, serif;
   line-height: 1.1em;
   width: 95%;
   -moz-border-radius: 0.5em;
@@ -765,11 +761,11 @@ body > nav ul {
   }
   body > nav a {
     color: #737373;
-    font-family: "Open Sans", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
+    font-family: "Bubblegum Sans", sans-serif;
     text-shadow: #f7f7f7 0 1px;
     float: left;
     text-decoration: none;
-    font-size: .9em;
+    font-size: 1.1em;
     padding: .3em 0 .1em;
     line-height: 1.5em;
   }
@@ -1309,7 +1305,7 @@ p pre code, li pre code {
 }
 
 .pre-code, html .gist .gist-file .gist-syntax .highlight pre, .highlight code {
-  font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", DotumChe, monospace !important;
+  font-family: Inconsolata, monospace !important;
   overflow: scroll;
   overflow-y: hidden;
   display: block;
@@ -1605,7 +1601,7 @@ figure.code .highlight {
   -moz-border-radius-topright: 5px;
   -webkit-border-top-right-radius: 5px;
   border-top-right-radius: 5px;
-  font-family: "Open Sans", "Helvetica Neue", Arial, NanumBarunGothic, "Apple SD Gothic Neo", AppleGothic, "Malgun Gothic", DotumChe, sans-serif;
+  font-family: Lora, serif;
   background: #cccccc url('/source/images/code_bg.png?1415283289') top repeat-x;
   border-top-color: #cbcbcb;
   border-left-color: #a5a5a5;
