@@ -3,8 +3,10 @@
 
 module Main where
 
+import Data.Time.Clock.POSIX
 import Data.Monoid ((<>), mconcat)
 import Hakyll
+import Portuguese
 
 main :: IO ()
 main = hakyllWith config rules
@@ -133,15 +135,18 @@ rules = do
 
     match "templates/*" $ compile templateCompiler
 
+dateFieldLoc :: String -> String -> Context a
+dateFieldLoc = dateFieldWith timeLocalePtBr
+
 postCtx :: Context String
 postCtx = mconcat
     [ teaserField "teaser" "content"
-    , dateField "date"       "%B %e, %Y"
-    , dateField "date_full"  "%F"
-    , dateField "date_dmy"   "%d/%m/%Y"
-    , dateField "date_day"   "%d"
-    , dateField "date_month" "%b"
-    , dateField "date_year"  "%Y"
+    , dateFieldLoc "date"       "%e de %B, %Y"
+    , dateFieldLoc "date_full"  "%F"
+    , dateFieldLoc "date_dmy"   "%d/%m/%Y"
+    , dateFieldLoc "date_day"   "%d"
+    , dateFieldLoc "date_month" "%b"
+    , dateFieldLoc "date_year"  "%Y"
     , defaultContext
     ]
 
