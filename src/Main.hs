@@ -13,7 +13,9 @@ main = hakyllWith config rules
 
 config :: Configuration
 config = defaultConfiguration {
-    deployCommand = "s3cmd sync -P --delete-removed _site/ s3://andrewalker.net"
+    deployCommand = "s3cmd sync -P --delete-removed "
+                 ++ "--add-header=\"Cache-Control: max-age=3600\" "
+                 ++ "_site/ s3://andrewalker.net"
 }
 
 rules :: Rules ()
