@@ -2,21 +2,24 @@
 
 [![Build Status](https://travis-ci.org/andrewalker/hakyll-awn.svg)](https://travis-ci.org/andrewalker/hakyll-awn)
 
-Este é o código-fonte do meu site pessoal. Deve ir ao ar muito em breve. Por
-enquanto, estou apenas criando as páginas e o programando em Haskell \o/
+Este é o código-fonte do meu [site pessoal](https://andrewalker.net). Ainda não
+possui muito conteúdo, estou concentrado ajustando os detalhes de programação,
+design, e infraestrutura. Inclusive, os primeiros posts serão predominantemente
+explicando como fiz isso.
 
 ## Instalando
 
-Certifique-se que tem instalado ghc e cabal.
+Certifique-se que tem instalado ``cabal``. Caso não saiba como começar, instale
+a [Haskell Platform](https://www.haskell.org/platform/).
 
-``` bash
+``` shell
 
-    $ cabal sandbox init
-    $ cabal configure
-    $ cabal build
-    $ cabal run build
-    $ cabal run watch
+$ cabal sandbox init
+$ cabal configure
+$ cabal build
+$ cabal run build
+$ cabal run watch
 
 ```
 
-Acesse http://localhost:8000 e navegue pelo site!
+Acesse [http://localhost:8000](http://localhost:8000) e navegue pelo site!
