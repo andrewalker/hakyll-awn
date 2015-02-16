@@ -1,0 +1,85 @@
+### Keybase proof
+
+I hereby claim:
+
+  * I am andrewalker on github.
+  * I am andrewalker (https://keybase.io/andrewalker) on keybase.
+  * I have a public key whose fingerprint is 3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A
+
+To claim this, I am signing this object:
+
+```json
+{
+    "body": {
+        "key": {
+            "fingerprint": "3013472efa538afc1b3736d46158780d27c0d33a",
+            "host": "keybase.io",
+            "key_id": "6158780d27c0d33a",
+            "kid": "010195f0d3305a62bee8e830d0260e0700bc837b53eb50791bc2f8ce48e473c2c0d60a",
+            "uid": "968c5ffb1da19053548d1a71771d7100",
+            "username": "andrewalker"
+        },
+        "service": {
+            "name": "github",
+            "username": "andrewalker"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1424092667,
+    "expire_in": 157680000,
+    "prev": "28f90f04f1aa5b3367d02522ca8b051a0615482986c7480954236e6c446459cf",
+    "seqno": 2,
+    "tag": "signature"
+}
+```
+
+with the PGP key whose fingerprint is
+[3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A](https://keybase.io/andrewalker)
+(captured above as `body.key.fingerprint`), yielding the PGP signature:
+
+```
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.4
+Comment: https://keybase.io/crypto
+
+yMIQAnicfZJtSBRBHMZPPfOlDAs/CWYuFkSHzuzr7IkoFSSEYpSRvaA7u7Pncrl3
+7Z16oiYpveiHohTEtMKITDFCs7I68IpUVDD1Q4IYaRjih9QyCAqiXbFv0XwZ5vk/
+z4+Zh3kbF2GLDWvPWKluLTwVFzb+OqvMdnzhy68qCnuUSspZRbnJxqZquosYXkPT
+/ZSTYgBkWIEmqsQxSFJliBmB4RWWhxwSEFBoQQYKw0iUgyrx+KyEicGSj6RpHlMz
+D0WaYqr/8Ls3BgACKHKqJQJO4mlMCCKIAQqgeUCAAACWESNgjiGYA4IIsUyrSCYs
+IqzAyLSJ44GFK9vAiTySOVXFUJGgCDiGY5ECJQEKAlQECIBl9BFDl0qJ6ZZ0xSAV
+0jk3MagaB2UOyjWZWC1sGlyav6QM/zfkr/RaagXBRZv5IqzpitmiGSsnhk/z6JQT
+mk7Zr1kAyNIsEGmeFxwUCXg1gxRploMTeATM5aC8Bik3kTRSRaACVoWSxGGG4QWz
+FI6mZQlhwEEJmKWyiBYRLwssAiLH0gxPeJlleZYTZZWyXnRe91BO2rym5DKRPs2l
+S/4yg1A1b0Jn7LawWNuWyHDrH9hiY+L//o4bJNo20Zj7uPVZZG3bwO6FQHVwOD29
+/kCk7UlyWu+cL6c7OLTQ/H6hPvlsQl1HXOPOrvtNIY+74sStHD1/8GQl/nBwb9PH
+4fGU4jF/u5h9eMfU4tq2rpXh7F3zc/aR2tl3U9NbM0cz25YcpydUEGSirqU+sD8d
+C78ZE6qYOjZ7N5BUO4qzg0dG+uraV/OH4pzPQz+iIV4PTchfE12wo3m1YS2xoWD/
+voFLMdGdYeuL9+SM0bzErJZvLUkJubG9mVER329f3XNhfnm6Uny5dCW1/9VSxh10
++eij5e2/O3viZwIFhckzLyZ7HhbXBOLnPwVbcg9d/Nzn+jnYPVmad703Re+3/wHp
+GSil
+=7U4x
+-----END PGP MESSAGE-----
+
+```
+
+And finally, I am proving ownership of the github account by posting this as a gist.
+
+### My publicly-auditable identity:
+
+https://keybase.io/andrewalker
+
+### From the command line:
+
+Consider the [keybase command line program](https://keybase.io/docs/command_line).
+
+```bash
+# look me up
+keybase id andrewalker
+
+# encrypt a message to me
+keybase encrypt andrewalker -m 'a secret message...'
+
+# ...and more...
+```

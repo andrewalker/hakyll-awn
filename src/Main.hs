@@ -20,6 +20,10 @@ rules :: Rules ()
 rules = do
     deploymentId <- preprocess getDeploymentId
 
+    match "keybase.txt" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
