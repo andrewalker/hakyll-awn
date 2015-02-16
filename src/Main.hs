@@ -121,7 +121,7 @@ rules = do
             renderAtom feedConfiguration feedCtx posts
 
     blog <- buildPaginateWith
-        (\ids -> return $ paginateEvery 2 $ reverse ids)
+        (\ids -> return $ paginateEvery 10 $ reverse ids)
         "posts/*"
         (\n -> if n == 1
             then "index.html"
