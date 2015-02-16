@@ -1,14 +1,15 @@
-### Keybase proof
+==================================================================
+https://keybase.io/andrewalker
+--------------------------------------------------------------------
 
 I hereby claim:
 
-  * I am andrewalker on github.
+  * I am an admin of https://andrewalker.net
   * I am andrewalker (https://keybase.io/andrewalker) on keybase.
-  * I have a public key whose fingerprint is 3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A
+  * I have a public key with fingerprint 3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A
 
 To claim this, I am signing this object:
 
-```json
 {
     "body": {
         "key": {
@@ -20,66 +21,47 @@ To claim this, I am signing this object:
             "username": "andrewalker"
         },
         "service": {
-            "name": "github",
-            "username": "andrewalker"
+            "hostname": "andrewalker.net",
+            "protocol": "https:"
         },
         "type": "web_service_binding",
         "version": 1
     },
-    "ctime": 1424092667,
+    "ctime": 1424092888,
     "expire_in": 157680000,
-    "prev": "28f90f04f1aa5b3367d02522ca8b051a0615482986c7480954236e6c446459cf",
-    "seqno": 2,
+    "prev": "d08fb724b4e2abb387459bf0426e24cd2eceec587245bc202f88f07b1edda73d",
+    "seqno": 4,
     "tag": "signature"
 }
-```
 
-with the PGP key whose fingerprint is
-[3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A](https://keybase.io/andrewalker)
-(captured above as `body.key.fingerprint`), yielding the PGP signature:
+which yields the PGP signature:
 
-```
 -----BEGIN PGP MESSAGE-----
 Version: Keybase OpenPGP v2.0.4
 Comment: https://keybase.io/crypto
 
-yMIQAnicfZJtSBRBHMZPPfOlDAs/CWYuFkSHzuzr7IkoFSSEYpSRvaA7u7Pncrl3
-7Z16oiYpveiHohTEtMKITDFCs7I68IpUVDD1Q4IYaRjih9QyCAqiXbFv0XwZ5vk/
-z4+Zh3kbF2GLDWvPWKluLTwVFzb+OqvMdnzhy68qCnuUSspZRbnJxqZquosYXkPT
-/ZSTYgBkWIEmqsQxSFJliBmB4RWWhxwSEFBoQQYKw0iUgyrx+KyEicGSj6RpHlMz
-D0WaYqr/8Ls3BgACKHKqJQJO4mlMCCKIAQqgeUCAAACWESNgjiGYA4IIsUyrSCYs
-IqzAyLSJ44GFK9vAiTySOVXFUJGgCDiGY5ECJQEKAlQECIBl9BFDl0qJ6ZZ0xSAV
-0jk3MagaB2UOyjWZWC1sGlyav6QM/zfkr/RaagXBRZv5IqzpitmiGSsnhk/z6JQT
-mk7Zr1kAyNIsEGmeFxwUCXg1gxRploMTeATM5aC8Bik3kTRSRaACVoWSxGGG4QWz
-FI6mZQlhwEEJmKWyiBYRLwssAiLH0gxPeJlleZYTZZWyXnRe91BO2rym5DKRPs2l
-S/4yg1A1b0Jn7LawWNuWyHDrH9hiY+L//o4bJNo20Zj7uPVZZG3bwO6FQHVwOD29
-/kCk7UlyWu+cL6c7OLTQ/H6hPvlsQl1HXOPOrvtNIY+74sStHD1/8GQl/nBwb9PH
-4fGU4jF/u5h9eMfU4tq2rpXh7F3zc/aR2tl3U9NbM0cz25YcpydUEGSirqU+sD8d
-C78ZE6qYOjZ7N5BUO4qzg0dG+uraV/OH4pzPQz+iIV4PTchfE12wo3m1YS2xoWD/
-voFLMdGdYeuL9+SM0bzErJZvLUkJubG9mVER329f3XNhfnm6Uny5dCW1/9VSxh10
-+eij5e2/O3viZwIFhckzLyZ7HhbXBOLnPwVbcg9d/Nzn+jnYPVmad703Re+3/wHp
-GSil
-=7U4x
+yMIYAnicbZJrSFRBFMd3rayWpLIPSfRyIiKwmvuc2Q2SQNSKLMWeLix37sy1i+69
+293rmvmICswvRUUF9o4kDO1lIBWlKX0po3ehWUmCYRmCFFSQ1FypTzVfhjnnf35n
+zp9zL2WcL+A/uXy4qn7L1hR/V0dOma/w/XB3JSA2rQChSlDCxi7DtIqZE3NMywUh
+IEFBkpHIDE2RsGboApGQpFJZFRSMMKQi0iGVJA1kgG123KvgGKLF2VLT5jH+iJiU
+R/+jLxlLQAEKQcXwglDRVJEwhhmWIIWiChlEEBIdS4goEiMKREGB6KKBdSZjJiNJ
+FzlOhR6ubAwXVLGuGAYRqCYEoSIpMqaChgSEBIoECD1hnDmWFmVcrVnUYeVaaQlz
+QHUG4ImEqTPPBW+Yf0VLLeZyQsyxXVu3S3lym+vG4iGv2K2IeepyRiJ/OBFiWpS7
+ySsSzImbtgVCAlfqrumBBVmUYVDEGGcAtiNmOixiegoFqRjy4/VhCY6kEBsEiTKR
+magRImEkK0FiQFlUmSjrVGQ6Yzr3V5QV7g7k/mADIiIwSjUkUeBNtt2yQUjm39SK
+OTJuFluaW+YwUN15Nzze5w/4kickefvgC0ye9ndLshZNHE27fflS0rxvifDmaFM0
+reXVffEoTn7dUlB3hEqtt98OtjQXRFs6OyfFf5yd4kute+6M1s/4AHumL6g9eOH0
+oaRcQf06vTYz+5pb1JW7d/fLtjlGuKc758HPVddnNfd2xMOFkTVpA3M/fX9nZ4Pc
+lQXD9H7eis3++R155zbeq7/bV3MlUFT1pnfT4vM38NBCMCI9TOT/Cux72qWahu/i
+4+jMM3dWp19d21Y3eLyvcklxRdqkmv3Vmemt+seHYuaXwbxljzrdA9kbPuc3LOvf
+xQ41g0Ak9Xr7+lMD/sYTDw5X3+p/kvV0p/Jr3c2RPe3hqc+GTuLWxtnHZvsbRqed
+eXE4ZbTpN7JZLZY=
+=633g
 -----END PGP MESSAGE-----
 
-```
+And finally, I am proving ownership of this host by posting or
+appending to this document.
 
-And finally, I am proving ownership of the github account by posting this as a gist.
+View my publicly-auditable identity here: https://keybase.io/andrewalker
 
-### My publicly-auditable identity:
-
-https://keybase.io/andrewalker
-
-### From the command line:
-
-Consider the [keybase command line program](https://keybase.io/docs/command_line).
-
-```bash
-# look me up
-keybase id andrewalker
-
-# encrypt a message to me
-keybase encrypt andrewalker -m 'a secret message...'
-
-# ...and more...
-```
+==================================================================
