@@ -168,15 +168,16 @@ pdfCompiler = do
 
     content <- readPandoc <$> getResourceBody
 
-    Right pdf <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
+    res <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
         {
           writerStandalone = True
         , writerTemplate = template
         , writerVariables = [("geometry", "margin=2cm")]
         } (itemBody content)
 
-    makeItem pdf
-
+    case res of
+        Right pdf -> makeItem pdf
+        Left  err -> error $ show err
 
 dateFieldLoc :: String -> String -> Context a
 dateFieldLoc = dateFieldWith timeLocalePtBr
