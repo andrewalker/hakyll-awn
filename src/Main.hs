@@ -4,9 +4,12 @@
 module Main where
 
 import Data.Time.Clock.POSIX
-import Data.Monoid ((<>), mconcat)
-import Hakyll
+import Data.Monoid ((<>))
+import qualified Data.ByteString.Lazy as LB
+import Text.Pandoc
+import Text.Pandoc.PDF (makePDF)
 import Portuguese
+import Hakyll
 
 main :: IO ()
 main = hakyllWith config rules
@@ -51,6 +54,10 @@ rules = do
         compile $ do
             items <- loadAllSnapshots "css/*" "raw"
             makeItem $ compressCss $ concat $ map itemBody (items :: [Item String])
+
+    match "cv.md" $ do
+        route   $ setExtension "pdf"
+        compile pdfCompiler
 
     match "pages/*" $ do
         route   pagesRoute
@@ -147,6 +154,30 @@ rules = do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
+
+getPdfTemplate :: IO String
+getPdfTemplate = do
+    templ <- getDefaultTemplate Nothing "latex"
+    case templ of
+      Right t -> return t
+      Left e  -> error $ show e
+
+pdfCompiler :: Compiler (Item LB.ByteString)
+pdfCompiler = do
+    template <- unsafeCompiler getPdfTemplate
+
+    content <- readPandoc <$> getResourceBody
+
+    res <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
+        {
+          writerStandalone = True
+        , writerTemplate = template
+        , writerVariables = [("geometry", "margin=2cm")]
+        } (itemBody content)
+
+    case res of
+        Right pdf -> makeItem pdf
+        Left  err -> error $ show err
 
 dateFieldLoc :: String -> String -> Context a
 dateFieldLoc = dateFieldWith timeLocalePtBr

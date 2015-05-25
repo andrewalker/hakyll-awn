@@ -1,9 +1,8 @@
-{-# LANGUAGE OverloadedStrings #-}
 module Portuguese (
     timeLocalePtBr
 ) where
 
-import System.Locale
+import Data.Time.Format
 
 timeLocalePtBr :: TimeLocale
 timeLocalePtBr = TimeLocale {
@@ -18,15 +17,6 @@ timeLocalePtBr = TimeLocale {
                   ("Julho",     "Jul"), ("Agosto",    "Ago"),
                   ("Setembro",  "Set"), ("Outubro",   "Out"),
                   ("Novembro",  "Nov"), ("Dezembro",  "Dez")],
-
-        intervals = [ ("ano","anos")
-                    , ("mês", "meses")
-                    , ("dia","dias")
-                    , ("hora","horas")
-                    , ("minuto","minutos")
-                    , ("segundo","segundos")
-                    , ("micro seg","micro segs")
-                    ],
 
         amPm = ("am", "pm"),
         dateTimeFmt = "%a %b %e %H:%M:%S %Z %Y",

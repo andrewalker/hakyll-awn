@@ -5,10 +5,11 @@ cabal-version:      >= 1.10
 
 executable site
   main-is:          Main.hs
-  build-depends:    base == 4.*
+  build-depends:    base == 4.8.*
                   , hakyll == 4.6.*
-                  , old-locale == 1.0.*
-                  , time == 1.4.*
+                  , pandoc
+                  , bytestring
+                  , time == 1.5.*
   ghc-options:      -threaded -Wall
   default-language: Haskell2010
   Hs-source-dirs:   src/
