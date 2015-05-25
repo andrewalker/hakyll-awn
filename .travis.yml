@@ -1,6 +1,6 @@
 sudo: false
 language: haskell
-ghc: "7.10"
+ghc: '7.10.1'
 install:
     - cabal install -f-previewserver -f-watchserver -f-checkexternal hakyll
     - cabal configure --disable-library-profiling --disable-tests --disable-library-coverage --disable-benchmarks --disable-split-objs
