@@ -4,9 +4,7 @@
 # test only against the last release in a major GHC version. Feel free to omit
 # lines listings versions you don't need/want testing for.
 env:
- - CABALVER=1.22 GHCVER=7.10.1
  - CABALVER=1.22 GHCVER=7.10.2
- - CABALVER=head GHCVER=head   # see section about GHC HEAD snapshots
 
 # Note: the distinction between `before_install` and `install` is not important.
 before_install:
@@ -14,12 +12,14 @@ before_install:
  - travis_retry sudo apt-get update
  - travis_retry sudo apt-get install cabal-install-$CABALVER ghc-$GHCVER
  - travis_retry sudo apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-fonts-extra
+ - texconfig font rw
  - export PATH=/opt/ghc/$GHCVER/bin:/opt/cabal/$CABALVER/bin:$PATH
 
-cache:
-    apt: true
-    directories:
-        - /home/travis/.cabal/
+# only with sudo: false
+# cache:
+#     apt: true
+#     directories:
+#         - /home/travis/.cabal/
 
 install:
  - cabal --version
