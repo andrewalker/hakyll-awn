@@ -6,8 +6,6 @@
 
 ## Conteúdo
 
- - Criar conteúdo da página Sobre
- - Criar conteúdo da página Contato
  - Posts:
     - Conhecendo Hakyll/Haskell
     - Publicando com Amazon S3 e CloudFront

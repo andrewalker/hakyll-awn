@@ -2,10 +2,7 @@
 
 [![Build Status](https://travis-ci.org/andrewalker/hakyll-awn.svg)](https://travis-ci.org/andrewalker/hakyll-awn)
 
-Este é o código-fonte do meu [site pessoal](https://andrewalker.net). Ainda não
-possui muito conteúdo, estou concentrado ajustando os detalhes de programação,
-design, e infraestrutura. Inclusive, os primeiros posts serão predominantemente
-explicando como fiz isso.
+Este é o código-fonte do meu [site pessoal](https://andrewalker.net).
 
 ## Instalando
 
@@ -17,8 +14,15 @@ a [Haskell Platform](https://www.haskell.org/platform/).
 $ cabal sandbox init
 $ cabal configure
 $ cabal build
-$ cabal run build
-$ cabal run watch
+$ ./reload.sh
+
+```
+
+Em outro shell:
+
+``` shell
+
+$ cabal run server
 
 ```
 
