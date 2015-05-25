@@ -4,9 +4,11 @@
 module Main where
 
 import Data.Time.Clock.POSIX
-import Data.Monoid ((<>), mconcat)
+import Data.Monoid ((<>))
+import qualified Data.ByteString.Lazy as LB
+import Text.Pandoc
+import Text.Pandoc.PDF (makePDF)
 import Hakyll
-import Portuguese
 
 main :: IO ()
 main = hakyllWith config rules
@@ -51,6 +53,10 @@ rules = do
         compile $ do
             items <- loadAllSnapshots "css/*" "raw"
             makeItem $ compressCss $ concat $ map itemBody (items :: [Item String])
+
+    match "cv.md" $ do
+        route   $ setExtension "pdf"
+        compile pdfCompiler
 
     match "pages/*" $ do
         route   pagesRoute
@@ -148,18 +154,37 @@ rules = do
 
     match "templates/*" $ compile templateCompiler
 
-dateFieldLoc :: String -> String -> Context a
-dateFieldLoc = dateFieldWith timeLocalePtBr
+getPdfTemplate :: IO String
+getPdfTemplate = do
+    templ <- getDefaultTemplate Nothing "latex"
+    case templ of
+      Right t -> return t
+      Left e  -> error $ show e
+
+pdfCompiler :: Compiler (Item LB.ByteString)
+pdfCompiler = do
+    template <- unsafeCompiler getPdfTemplate
+
+    content <- readPandoc <$> getResourceBody
+
+    Right pdf <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
+        {
+          writerStandalone = True
+        , writerTemplate = template
+        , writerVariables = [("geometry", "margin=2cm")]
+        } (itemBody content)
+
+    makeItem pdf
 
 postCtx :: Context String
 postCtx = mconcat
     [ teaserField "teaser" "content"
-    , dateFieldLoc "date"       "%e de %B, %Y"
-    , dateFieldLoc "date_full"  "%F"
-    , dateFieldLoc "date_dmy"   "%d/%m/%Y"
-    , dateFieldLoc "date_day"   "%d"
-    , dateFieldLoc "date_month" "%b"
-    , dateFieldLoc "date_year"  "%Y"
+    , dateField "date"       "%e de %B, %Y"
+    , dateField "date_full"  "%F"
+    , dateField "date_dmy"   "%d/%m/%Y"
+    , dateField "date_day"   "%d"
+    , dateField "date_month" "%b"
+    , dateField "date_year"  "%Y"
     , defaultContext
     ]
 
