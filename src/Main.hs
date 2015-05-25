@@ -8,6 +8,7 @@ import Data.Monoid ((<>))
 import qualified Data.ByteString.Lazy as LB
 import Text.Pandoc
 import Text.Pandoc.PDF (makePDF)
+import Portuguese
 import Hakyll
 
 main :: IO ()
@@ -176,15 +177,19 @@ pdfCompiler = do
 
     makeItem pdf
 
+
+dateFieldLoc :: String -> String -> Context a
+dateFieldLoc = dateFieldWith timeLocalePtBr
+
 postCtx :: Context String
 postCtx = mconcat
     [ teaserField "teaser" "content"
-    , dateField "date"       "%e de %B, %Y"
-    , dateField "date_full"  "%F"
-    , dateField "date_dmy"   "%d/%m/%Y"
-    , dateField "date_day"   "%d"
-    , dateField "date_month" "%b"
-    , dateField "date_year"  "%Y"
+    , dateFieldLoc "date"       "%e de %B, %Y"
+    , dateFieldLoc "date_full"  "%F"
+    , dateFieldLoc "date_dmy"   "%d/%m/%Y"
+    , dateFieldLoc "date_day"   "%d"
+    , dateFieldLoc "date_month" "%b"
+    , dateFieldLoc "date_year"  "%Y"
     , defaultContext
     ]
 
