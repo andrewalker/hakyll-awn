@@ -8,6 +8,7 @@ import Data.Monoid ((<>))
 import qualified Data.ByteString.Lazy as LB
 import Text.Pandoc
 import Text.Pandoc.PDF (makePDF)
+import System.FilePath
 import Portuguese
 import Hakyll
 
@@ -21,8 +22,11 @@ config = defaultConfiguration {
 
 rules :: Rules ()
 rules = do
-    deploymentId <- preprocess getDeploymentId
+    staticId <- preprocess getStaticId
+    rulesWithStaticId staticId
 
+rulesWithStaticId :: Integer -> Rules ()
+rulesWithStaticId staticId = do
     match "keybase.txt" $ do
         route   idRoute
         compile copyFileCompiler
@@ -31,28 +35,28 @@ rules = do
         route   idRoute
         compile copyFileCompiler
 
-    match "webicons/*" $ do
-        route   idRoute
+    match "assets/webicons/*" $ do
+        route $ assetsRoute' "webicons/"
         compile copyFileCompiler
 
-    match "fonts/*" $ do
-        route   idRoute
+    match "assets/fonts/*" $ do
+        route $ assetsRoute' "fonts/"
         compile copyFileCompiler
 
-    match "js/*" $ do
-        route   idRoute
+    match "assets/js/*" $ do
+        route $ assetsRoute' "js/"
         compile copyFileCompiler
 
-    -- FIXME: how to avoid this? I only want style.css, so the other css files
-    -- shouldn't be copied.
-    match "css/*" $ do
-        route idRoute
+    match "assets/css/*" $ do
+        -- Uncomment the following line for debugging:
+        -- route idRoute
+        -- And access at http://localhost:8000/assets/css
         compile $ getResourceBody >>= saveSnapshot "raw"
 
     create ["style.css"] $ do
-        route $ assetsRoute deploymentId
+        route $ assetsRoute' ""
         compile $ do
-            items <- loadAllSnapshots "css/*" "raw"
+            items <- loadAllSnapshots "assets/css/*" "raw"
             makeItem $ compressCss $ concat $ map itemBody (items :: [Item String])
 
     match "cv.md" $ do
@@ -62,11 +66,9 @@ rules = do
     match "pages/*" $ do
         route   pagesRoute
         compile $ do
-            let ctx = defaultContext <> constField "deploymentId" (show deploymentId)
-
             pandocCompiler
-                >>= loadAndApplyTemplate "templates/page.html"    ctx
-                >>= loadAndApplyTemplate "templates/default.html" ctx
+                >>= loadAndApplyTemplate "templates/page.html"    siteCtx'
+                >>= loadAndApplyTemplate "templates/default.html" siteCtx'
                 >>= relativizeUrls
 
     tags <- buildTags "posts/*" (fromCapture "tags/*.html")
@@ -78,9 +80,8 @@ rules = do
             posts <- recentFirst =<< loadAll pattern
             let ctx = mconcat
                   [ constField "title" title
-                  , constField "deploymentId" (show deploymentId)
-                  , listField "posts" postCtx (return posts)
-                  , defaultContext
+                  , listField "posts" postCtx' (return posts)
+                  , siteCtx'
                   ]
 
             makeItem ""
@@ -91,10 +92,7 @@ rules = do
     match "posts/*" $ do
         route $ setExtension "html"
         compile $ do
-            let postCtxWithTags =
-                    tagsField "tags" tags <>
-                    constField "deploymentId" (show deploymentId) <>
-                    postCtx
+            let postCtxWithTags = tagsField "tags" tags <> postCtx'
 
             pandocCompiler
                 >>= saveSnapshot "content"
@@ -106,12 +104,12 @@ rules = do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll "posts/*"
+
             let archiveCtx = mconcat
-                  [ listField "posts" postCtx (return posts)
+                  [ listField "posts" postCtx' (return posts)
                   , constField "title" "Arquivo"
-                  , constField "deploymentId" (show deploymentId)
                   , field "tagcloud" (\_ -> renderTagCloud 100 250 (sortTagsBy caseInsensitiveTags tags))
-                  , defaultContext
+                  , siteCtx'
                   ]
 
             makeItem ""
@@ -122,9 +120,10 @@ rules = do
     create ["atom.xml"] $ do
         route idRoute
         compile $ do
-            let feedCtx = bodyField "description" <> postCtx
+            let feedCtx = bodyField "description" <> postCtx'
 
             posts <- fmap (take 10) . recentFirst =<< loadAllSnapshots "posts/*" "content"
+
             renderAtom feedConfiguration feedCtx posts
 
     blog <- buildPaginateWith
@@ -142,10 +141,9 @@ rules = do
             let paginateCtx = paginateContext blog pageNum
             let ctx         = mconcat
                   [ constField "title" "Home"
-                  , constField "deploymentId" (show deploymentId)
-                  , listField "posts" (postCtx <> paginateCtx) (return posts)
+                  , listField "posts" (postCtx' <> paginateCtx) (return posts)
                   , paginateCtx
-                  , defaultContext
+                  , siteCtx'
                   ]
 
             makeItem ""
@@ -154,6 +152,11 @@ rules = do
                 >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
+
+  where
+    postCtx' = postCtx staticId
+    siteCtx' = siteCtx staticId
+    assetsRoute' = assetsRoute staticId
 
 getPdfTemplate :: IO String
 getPdfTemplate = do
@@ -182,8 +185,8 @@ pdfCompiler = do
 dateFieldLoc :: String -> String -> Context a
 dateFieldLoc = dateFieldWith timeLocalePtBr
 
-postCtx :: Context String
-postCtx = mconcat
+postCtx :: Integer -> Context String
+postCtx staticId = mconcat
     [ teaserField "teaser" "content"
     , dateFieldLoc "date"       "%e de %B, %Y"
     , dateFieldLoc "date_full"  "%F"
@@ -191,6 +194,12 @@ postCtx = mconcat
     , dateFieldLoc "date_day"   "%d"
     , dateFieldLoc "date_month" "%b"
     , dateFieldLoc "date_year"  "%Y"
+    , siteCtx staticId
+    ]
+
+siteCtx :: Integer -> Context String
+siteCtx staticId = mconcat
+    [ constField "staticId" (show staticId)
     , defaultContext
     ]
 
@@ -203,11 +212,14 @@ feedConfiguration = FeedConfiguration
     , feedRoot        = "https://andrewalker.net"
     }
 
-getDeploymentId :: IO Integer
-getDeploymentId = round `fmap` getPOSIXTime
+getStaticId :: IO Integer
+getStaticId = round `fmap` getPOSIXTime
 
-assetsRoute :: Integer -> Routes
-assetsRoute id' = customRoute $ ((show id') ++) . toFilePath
+assetsRoute ::  Integer -> String -> Routes
+assetsRoute staticId folder = customRoute $ prefixPlus . takeFileName . toFilePath
+  where
+    prefix     = (show staticId) ++ "/" ++ folder
+    prefixPlus = (prefix ++)
 
 pagesRoute :: Routes
 pagesRoute =
