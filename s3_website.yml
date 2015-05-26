@@ -3,13 +3,19 @@ s3_secret: <%= ENV['S3_SECRET'] %>
 s3_bucket: andrewalker.net
 
 max_age:
-  "*.css":      14400
-  "*.js":       14400
-  "*.html":      3600
-  "index.html":   300
+  "*.css":      31536000
+  "*.js":       31536000
+  "*.png":      31536000
+  "*.svg":      31536000
+  "fonts/*":    31536000
+  "*.html":          300
+  "index.html":      300
+  "cv.pdf":          300
 
 gzip:
   - .css
+  - .woff
+  - .pdf
 
 s3_reduced_redundancy: true
 s3_endpoint: sa-east-1
@@ -17,13 +23,9 @@ s3_endpoint: sa-east-1
 cloudfront_distribution_id: E7VKSV3R850GK
 
 cloudfront_distribution_config:
-  default_cache_behavior:
-    min_TTL: 14400
   aliases:
     quantity: 2
     items:
       CNAME:
         - andrewalker.net
         - www.andrewalker.net
-
-cloudfront_invalidate_root: true
