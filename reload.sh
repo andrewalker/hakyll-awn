@@ -5,8 +5,8 @@
 cabal run rebuild
 
 events="modify,create,delete,move"
-dir=$(basename $0)
-skip="@site.hi @site.o @_site/ @dist/ @_cache @.cabal_sandbox @cabal.sandbox.config @.git"
+dir=$(dirname $0)
+skip="@$dir/site.hi @$dir/site.o @$dir/_site/ @$dir/dist/ @$dir/_cache/ @$dir/.cabal_sandbox @$dir/cabal.sandbox.config @$dir/.git/"
 
 while inotifywait -r -e $events $dir $skip; do cabal run rebuild; done
 
