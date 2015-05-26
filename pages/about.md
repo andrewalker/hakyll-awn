@@ -10,6 +10,8 @@ Para ver o que programo, visite meu perfil no
 [GitHub](https://github.com/andrewalker) ou no
 [MetaCPAN](https://metacpan.org/author/ANDRE).
 
+Para entrar em contato comigo, [escreva um e-mail](mailto:andre+website@andrewalker.net).
+
 Sou casado com Ísis, a bela mulher da foto abaixo :)
 
 ![Ísis e André](images/isis-e-andre.png)
