@@ -9,7 +9,7 @@ I have a solid understanding of Perl, as well as most of the main libraries and
 frameworks of the language. I'm a big fan of the Catalyst MVC framework, and
 how it helps making applications maintainable without being too opinionated. I
 use it mostly with the extremely powerful DBIx::Class ORM, and Text::Xslate or
-Template::Toolkit for HTML templates.
+Template::Toolkit for web templates.
 
 I've written a fair amount of code in Java and C, mostly for learning purposes.
 I have a good knowledge of front-end languages for the web, like HTML,
@@ -47,14 +47,7 @@ but I also learned how to write better tests and the importance of
 back-compatibility, with the help of my mentors and other developers in the
 project.
 
-### Tactos (Advertising agency) **(August 2009 - July 2010)**
-
-Tactos is a small advertising agency based in Americana, state of São Paulo. My
-job was to work on an proprietary CMS, and to create websites in PHP. I also
-developed a few internal tools, configured file servers, HTTP servers, and even
-worked on a couple of Delphi projects.
-
-### Freelance jobs **(2010 - 2014)**
+### Freelance jobs **(August 2010 - present)**
 
 While in university, I worked on several freelance projects, including
 developing a system for registrations in W3C events in Brazil, such as Web.br
@@ -62,8 +55,15 @@ and WWW2013.
 
 I developed several small systems and maintained websites for local companies.
 I also performed sysadmin tasks, setting up virtual private servers that
-handled up to 20k pageviews per day, and mail servers to handle a couple
-hundred e-mail accounts.
+handled up to 20k pageviews per day, and mail servers containing over 600
+e-mail accounts.
+
+### Tactos (Advertising agency) **(August 2009 - July 2010)**
+
+Tactos is a small advertising agency based in Americana, state of São Paulo. My
+job was to work on an proprietary CMS, and to create websites in PHP. I also
+developed a few internal tools, configured file servers, HTTP servers, and even
+worked on a couple of Delphi projects.
 
 ## Skills
 
@@ -104,10 +104,10 @@ but I am currently much more fond of nginx.
 
 ## Open Source and Community
 
-I am an active advocate of Open Source. I have a very active GitHub profile
+I am engaged in advocating Open Source. I have a very active GitHub profile
 with several of my personal projects, or forks, and I have contributed to a
-variety of Perl projects such as Catalyst, DBIx::Class, DBIx::Class::Schema::Loader,
-Text::Xslate, BreadBoard and others.
+variety of Perl projects such as Catalyst, DBIx::Class,
+DBIx::Class::Schema::Loader, Text::Xslate, BreadBoard and others.
 
 I have spoken in a few local Perl Monger technical events and YAPC's, and once
 organized a hackaton of about 25 people.
