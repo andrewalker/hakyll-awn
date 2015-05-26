@@ -1,7 +1,5 @@
 # andrewalker.net
 
-[![Build Status](https://travis-ci.org/andrewalker/hakyll-awn.svg)](https://travis-ci.org/andrewalker/hakyll-awn)
-
 Este é o código-fonte do meu [site pessoal](https://andrewalker.net).
 
 ## Instalando
