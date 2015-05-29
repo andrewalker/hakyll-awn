@@ -169,7 +169,7 @@ pdfCompiler :: Compiler (Item LB.ByteString)
 pdfCompiler = do
     template <- unsafeCompiler getPdfTemplate
 
-    content <- readPandoc <$> getResourceBody
+    content <- readPandoc =<< getResourceBody
 
     res <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
         {
