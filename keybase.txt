@@ -1,0 +1,67 @@
+==================================================================
+https://keybase.io/andrewalker
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://andrewalker.net
+  * I am andrewalker (https://keybase.io/andrewalker) on keybase.
+  * I have a public key with fingerprint 3013 472E FA53 8AFC 1B37  36D4 6158 780D 27C0 D33A
+
+To claim this, I am signing this object:
+
+{
+    "body": {
+        "key": {
+            "fingerprint": "3013472efa538afc1b3736d46158780d27c0d33a",
+            "host": "keybase.io",
+            "key_id": "6158780d27c0d33a",
+            "kid": "010195f0d3305a62bee8e830d0260e0700bc837b53eb50791bc2f8ce48e473c2c0d60a",
+            "uid": "968c5ffb1da19053548d1a71771d7100",
+            "username": "andrewalker"
+        },
+        "service": {
+            "hostname": "andrewalker.net",
+            "protocol": "https:"
+        },
+        "type": "web_service_binding",
+        "version": 1
+    },
+    "ctime": 1424092888,
+    "expire_in": 157680000,
+    "prev": "d08fb724b4e2abb387459bf0426e24cd2eceec587245bc202f88f07b1edda73d",
+    "seqno": 4,
+    "tag": "signature"
+}
+
+which yields the PGP signature:
+
+-----BEGIN PGP MESSAGE-----
+Version: Keybase OpenPGP v2.0.4
+Comment: https://keybase.io/crypto
+
+yMIYAnicbZJrSFRBFMd3rayWpLIPSfRyIiKwmvuc2Q2SQNSKLMWeLix37sy1i+69
+293rmvmICswvRUUF9o4kDO1lIBWlKX0po3ehWUmCYRmCFFSQ1FypTzVfhjnnf35n
+zp9zL2WcL+A/uXy4qn7L1hR/V0dOma/w/XB3JSA2rQChSlDCxi7DtIqZE3NMywUh
+IEFBkpHIDE2RsGboApGQpFJZFRSMMKQi0iGVJA1kgG123KvgGKLF2VLT5jH+iJiU
+R/+jLxlLQAEKQcXwglDRVJEwhhmWIIWiChlEEBIdS4goEiMKREGB6KKBdSZjJiNJ
+FzlOhR6ubAwXVLGuGAYRqCYEoSIpMqaChgSEBIoECD1hnDmWFmVcrVnUYeVaaQlz
+QHUG4ImEqTPPBW+Yf0VLLeZyQsyxXVu3S3lym+vG4iGv2K2IeepyRiJ/OBFiWpS7
+ySsSzImbtgVCAlfqrumBBVmUYVDEGGcAtiNmOixiegoFqRjy4/VhCY6kEBsEiTKR
+magRImEkK0FiQFlUmSjrVGQ6Yzr3V5QV7g7k/mADIiIwSjUkUeBNtt2yQUjm39SK
+OTJuFluaW+YwUN15Nzze5w/4kickefvgC0ye9ndLshZNHE27fflS0rxvifDmaFM0
+reXVffEoTn7dUlB3hEqtt98OtjQXRFs6OyfFf5yd4kute+6M1s/4AHumL6g9eOH0
+oaRcQf06vTYz+5pb1JW7d/fLtjlGuKc758HPVddnNfd2xMOFkTVpA3M/fX9nZ4Pc
+lQXD9H7eis3++R155zbeq7/bV3MlUFT1pnfT4vM38NBCMCI9TOT/Cux72qWahu/i
+4+jMM3dWp19d21Y3eLyvcklxRdqkmv3Vmemt+seHYuaXwbxljzrdA9kbPuc3LOvf
+xQ41g0Ak9Xr7+lMD/sYTDw5X3+p/kvV0p/Jr3c2RPe3hqc+GTuLWxtnHZvsbRqed
+eXE4ZbTpN7JZLZY=
+=633g
+-----END PGP MESSAGE-----
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/andrewalker
+
+==================================================================

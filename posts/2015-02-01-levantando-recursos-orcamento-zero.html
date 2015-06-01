@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="iem7"><![endif]-->
+<!--[if lt IE 9]><html class="lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html lang="pt-br"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Levantando Recursos com Orçamento Zero - andrewalker.net</title>
+  <link href="../1433162548/style.css" rel="stylesheet" type="text/css">
+</head>
+<body class="no-sidebar">
+  <header role="banner">
+    <hgroup>
+      <h1><a href="../">andrewalker.net</a></h1>
+    </hgroup>
+  </header>
+  <nav role="navigation">
+    <ul class="subscribe">
+      <li><a href="https://twitter.com/andrewalkernet" rel="subscribe-twitter" title="andrewalker no Twitter" class="webicon twitter">andrewalker no Twitter</a></li>
+      <li><a href="https://github.com/andrewalker" rel="subscribe-github" title="andrewalker no GitHub" class="webicon github">andrewalker no GitHub</a></li>
+      <li><a href="https://linkedin.com/in/andrewalker" rel="subscribe-linkedin" title="andrewalker no LinkedIn" class="webicon linkedin">andrewalker no LinkedIn</a></li>
+      <li><a href="mailto:andre+website@andrewalker.net" rel="subscribe-mail" title="e-mail" class="webicon mail">e-mail</a></li>
+      <li><a href="../atom.xml" rel="subscribe-rss" title="Assine o RSS" class="webicon rss">Assine o RSS</a></li>
+    </ul>
+    <ul class="main-navigation">
+        <li><a href="../">Home</a></li>
+        <li><a href="../cv.pdf">Curriculum</a></li>
+        <li><a href="../about.html">Sobre</a></li>
+    </ul>
+  </nav>
+  <div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+         <header>
+            <h1 class="entry-title">Levantando Recursos com Orçamento Zero</h1>
+            <p class="meta">
+                <time class="entry-date" datetime="2015-02-01"><span class="date"> 1 de Fevereiro, 2015</span></time>
+              | <a href="#disqus_thread">comentários</a>
+            </p>
+        </header>
+        <div class="entry-content"><p>A história de como montei um sistema de pagamentos sob medida, usando as melhores ferramentas disponíveis <em>(sic)</em> com um custo inicial <strong>zero</strong>.</p>
+<p>Tudo começa com um menosprezo social pelo trabalho (e estudos) de minha irmã caçula…</p>
+<!--more-->
+<p>Minha irmã <a href="https://www.facebook.com/liliancwalker">Lilian</a> e sua amiga <a href="https://www.facebook.com/juliastradiotto">Júlia</a> estudam Artes Visuais na UNICAMP. Recentemente, ganharam uma bolsa de estudos para estudar na Universidade do Porto, em Portugal.</p>
+<p>Sabe como um monte de gente tem ido nestes últimos anos para o Ciências sem Fronteiras, ganhando uma série de <a href="http://www.cienciasemfronteiras.gov.br/web/csf/valores-de-auxilios-e-bolsas">bolsas e benefícios</a> além da vaga na universidade no exterior? Pois é, não é o caso da minha irmã. :(</p>
+<p>Infelizmente, Artes Visuais não são contempladas por programas como o CsF, e há muito menos bolsas disponíveis. O que significa que a estadia das duas ficaria por conta delas, e bancar todas as contas em Euros não é fácil.</p>
+<p>Daí a ideia de se montar um site para “rifar” 2 trabalhos de cada uma. Cada pessoa escolhe o número de “cupons” que quer comprar, isto é, podendo aumentar a probabilidade de ganhar. Se por outro lado, não tiver condições de contribuir muito, compra apenas 1 cupom apostando em apenas 1 trabalho. Cada cupom custaria R$ 5,00.</p>
+<p><strong>Resultado final</strong>: <a href="https://seismesesnoporto.ga">seismesesnoporto.ga</a></p>
+<p>Caso queira saber como foi criado, continue lendo :)</p>
+<h2 id="desenvolvendo-o-site---interface-visual">Desenvolvendo o site - interface visual</h2>
+<p>Eu não sou nenhum artista, e não tínhamos muito tempo. Como o orçamento era zero, procuramos templates HTML gratuitos e bonitos. Depois de algumas pesquisas, encontramos <a href="http://themes.alessioatzeni.com/html/brushed/">Brushed</a>.</p>
+<p>A partir do template, trocamos as imagens do slideshow por imagens de Porto, refizemos os textos, e trocamos o formulário de contato por um de pagamento. O site inteiro foi feito de forma estática, em HTML puro, e ele interagiria com uma aplicação que salvaria os dados e redirecionaria para o gateway de pagamento.</p>
+<p>Embora esta parte tenha gastado tempo significativo, não há muito mais de interessante para contar. É trabalhoso, mas não é meu forte, e há vários lugares que poderiam receber uma bela refatoração e otimização. Se algum designer ou programador front-end analisar meu código desta parte, peço perdão desde já :P</p>
+<h2 id="desenvolvendo-a-aplicação-back-end">Desenvolvendo a aplicação back-end</h2>
+<p>Sem surpresas por aqui - utilizei a fantástica framework MVC <a href="https://metacpan.org/pod/Catalyst">Catalyst</a> para desenvolver a aplicação com um banco de dados PostgreSQL, versionado por <a href="https://sqitch.org">sqitch</a>, acessado por <a href="https://metacpan.org/pod/DBIx::Class">DBIx::Class</a>.</p>
+<p>A aplicação teria o propósito de:</p>
+<ul>
+<li>Salvar os dados do “comprador”;</li>
+<li>Redirecioná-lo para a página de pagamentos;</li>
+<li>Alterar status dos pagamentos após confirmação do intermediador (eg. PayPal);</li>
+<li>Enviar e-mails com a confirmação de recebimento da rifa;</li>
+</ul>
+<p>Você pode checar o resultado final aqui: <a href="https://github.com/andrewalker/p5-porto6-web" class="uri">https://github.com/andrewalker/p5-porto6-web</a>.</p>
+<p>O fluxo completo, então, ficou assim:</p>
+<ul>
+<li>O usuário submete o formulário com os dados;</li>
+<li>uma requisição ajax é feita para <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Web/Controller/Checkout.pm">/place_order</a>;</li>
+<li>se a requisição foi bem sucedida, o id do pagamento (que é um UUID gerado pela aplicação) é devolvido para o javascript, que redireciona o usuário para <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Web/Controller/Redirect.pm">/redirect/:payment_id</a>;</li>
+<li>caso o pagamento seja via depósito, em vez disso, o usuário é redirecionado para <a href="https://seismesesnoporto.ga/deposit.html">deposit.html</a>;</li>
+<li>De tempos em tempos, uma tarefa cron aciona o método <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/AfterSales.pm#L144">update_all</a>, que atualiza os status dos pagamentos, e outra tarefa cron aciona o método <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/AfterSales.pm#L226">send_payment_received_mails</a>, que envia e-mails a quem está com status de pago;</li>
+</ul>
+<p>De forma que o fluxo dos status é o seguinte:</p>
+<pre><code>new -&gt; waiting -&gt; payed -&gt; sent-email
+   \         \
+    \         \-&gt; failed
+     \
+      \-&gt; expired</code></pre>
+<p><code>new</code> é o primeiro status de um pedido, assim que ele foi recebido por nós, antes de a pessoa ser redirecionada ao intermediador de pagamentos. Quando o intermediador fica sabendo da existência desse pagamento, o status muda imediatamente para <code>waiting</code>. Se um status fica em <code>new</code> por 24 horas, vai para <code>expired</code>. Por outro lado, o pedido fica em <code>waiting</code> até que o intermediador de pagamentos altere seu status.</p>
+<p>Por fim, os e-mails são enviados usando <a href="https://metacpan.org/pod/Email::Sender::Manual::QuickStart">Email::Sender::Simple</a> e <a href="https://metacpan.org/pod/Email::MIME">Email::MIME</a>, na classe <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Mailer.pm">Porto6::Mailer</a>. Toda a configuração do servidor SMTP a ser usado, bem como as credenciais, são por meio de variáveis de ambiente.</p>
+<p>A comunicação com os intermediadores de pagamento PayPal e PagSeguro são feitas por meio do bom e velho Business::CPI. Porém, pude perceber que este meu módulo precisa de bastante atenção :) Fica para um outro post.</p>
+<h2 id="a-publicação">A publicação</h2>
+<p>Agora a parte boa: como pus tudo isso no ar de graça?</p>
+<p>Comecemos pelo domínio: você deve ter se perguntado de onde vem esse “.ga”. Pois bem, é o <a href="https://en.wikipedia.org/wiki/.ga">domínio de Gabão</a>, assim como o br é do Brasil. Se a falta de conexão do site “Seis Meses no Porto” com Gabão lhe incomodar, lembre-se de quantos sites não-comerciais usam o .com :P</p>
+<p>Enfim, domínios .ga são <a href="http://www.freenom.com/en/index.html">oferecidos gratuitamente</a>.</p>
+<p>Além disso, utilizei <a href="https://www.cloudflare.com/">CloudFlare</a> para gerenciar o domínio. Isto me deu uma série de vantagens:</p>
+<ul>
+<li>um bom serviço DNS (sempre muito importante, não menospreze esta parte!);</li>
+<li><a href="https://pt.wikipedia.org/wiki/Content_Delivery_Network">distribuição global</a>;</li>
+<li>sistema de cache;</li>
+<li>certificado SSL gratuito;</li>
+</ul>
+<p>De cara, já resolvi um monte de problemas.</p>
+<p>O e-mail eu hospedei em um servidor próprio, no mesmo do <a href="https://andrewalker.net">andrewalker.net</a>. Se eu não tivesse este servidor, poderia ter utilizado um serviço de hospedagem de e-mails gratuito com domínio customizado como o <a href="https://www.zoho.com">zoho.com</a>. Isto não é tão fácil de se encontrar como se pode imaginar, já que Google Apps é pago, e a maioria dos provedores de e-mail gratuitos não permitem domínios customizados.</p>
+<p>A aplicação back-end eu hospedei utilizando <a href="https://www.heroku.com/">heroku</a>, com o <a href="https://github.com/miyagawa/heroku-buildpack-perl">buildpack do miyagawa</a>. Isto me possibilitou SSL entre CloudFlare e a aplicação, para sigilo completo dos dados, além de um deploy simples e rápido, com <a href="https://devcenter.heroku.com/articles/dataclips">ferramentas ótimas para relatórios rápidos</a>.</p>
+<p>Por fim, os e-mails foram enviados utilizando <a href="https://mandrillapp.com/">Mandrill</a>, que é gratuito para até 12 mil e-mails por dia. Diminui drasticamente as chances dos e-mails irem para spam, ou outros problemas similares. Além de mostrar gráficos legais sobre quem abriu os e-mails, etc.</p>
+<p>As tarefas cron, como para mudar status de pagamentos, etc, eram disparadas de um servidor próprio, que simplesmente acessavam URL’s via wget na aplicação back-end. Poderia ter sido feito com <a href="https://www.pingdom.com">Pingdom</a>, caso eu não tivesse o servidor.</p>
+<p>Por fim, utilizei <a href="https://getclicky.com">Clicky</a> para acompanhar o número de visitantes no site. Mais hipster que Google Analytics :P</p>
+<p>Caso queira ganhar um quadro, então, não perca tempo! Dia 07/02 será feito o sorteio!</p>
+<p><a href="https://seismesesnoporto.ga" class="uri">https://seismesesnoporto.ga</a></p></div>
+    </article>
+    <section>
+        <h1>Comentários</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Por favor, habilite javascript para visualizar <a href="http://disqus.com/?ref_noscript">comentários do Disqus.</a></noscript>
+        </div>
+    </section>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <p>Copyright &copy; 2014, 2015 - André Walker -
+    <span class="credit">
+        Baseado no tema <a href="https://github.com/lucaslew/whitespace" target="_blank">Whitespace</a>,
+        adaptado para <a href="http://jaspervdj.be/hakyll/" target="_blank">Hakyll</a>.
+    </span>
+    </p>
+  </footer>
+  <script src="../1433162548/js/modernizr.js"></script>
+  <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='count.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
+  <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
+
+  <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(66564894);
+    (function() {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = '//static.getclicky.com/js';
+        ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+  </script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/66564894ns.gif" /></p></noscript>
+</body>
+</html>

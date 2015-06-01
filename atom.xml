@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title>andrewalker.net</title>
+    <link href="https://andrewalker.net/atom.xml" rel="self" />
+    <link href="https://andrewalker.net" />
+    <id>https://andrewalker.net/atom.xml</id>
+    <author>
+        <name>André Walker</name>
+        <email>andre+website@andrewalker.net</email>
+    </author>
+    <updated>2015-02-01T00:00:00Z</updated>
+    <entry>
+    <title>Levantando Recursos com Orçamento Zero</title>
+    <link href="https://andrewalker.net/posts/2015-02-01-levantando-recursos-orcamento-zero.html" />
+    <id>https://andrewalker.net/posts/2015-02-01-levantando-recursos-orcamento-zero.html</id>
+    <published>2015-02-01T00:00:00Z</published>
+    <updated>2015-02-01T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>A história de como montei um sistema de pagamentos sob medida, usando as melhores ferramentas disponíveis <em>(sic)</em> com um custo inicial <strong>zero</strong>.</p>
+<p>Tudo começa com um menosprezo social pelo trabalho (e estudos) de minha irmã caçula…</p>
+<!--more-->
+<p>Minha irmã <a href="https://www.facebook.com/liliancwalker">Lilian</a> e sua amiga <a href="https://www.facebook.com/juliastradiotto">Júlia</a> estudam Artes Visuais na UNICAMP. Recentemente, ganharam uma bolsa de estudos para estudar na Universidade do Porto, em Portugal.</p>
+<p>Sabe como um monte de gente tem ido nestes últimos anos para o Ciências sem Fronteiras, ganhando uma série de <a href="http://www.cienciasemfronteiras.gov.br/web/csf/valores-de-auxilios-e-bolsas">bolsas e benefícios</a> além da vaga na universidade no exterior? Pois é, não é o caso da minha irmã. :(</p>
+<p>Infelizmente, Artes Visuais não são contempladas por programas como o CsF, e há muito menos bolsas disponíveis. O que significa que a estadia das duas ficaria por conta delas, e bancar todas as contas em Euros não é fácil.</p>
+<p>Daí a ideia de se montar um site para “rifar” 2 trabalhos de cada uma. Cada pessoa escolhe o número de “cupons” que quer comprar, isto é, podendo aumentar a probabilidade de ganhar. Se por outro lado, não tiver condições de contribuir muito, compra apenas 1 cupom apostando em apenas 1 trabalho. Cada cupom custaria R$ 5,00.</p>
+<p><strong>Resultado final</strong>: <a href="https://seismesesnoporto.ga">seismesesnoporto.ga</a></p>
+<p>Caso queira saber como foi criado, continue lendo :)</p>
+<h2 id="desenvolvendo-o-site---interface-visual">Desenvolvendo o site - interface visual</h2>
+<p>Eu não sou nenhum artista, e não tínhamos muito tempo. Como o orçamento era zero, procuramos templates HTML gratuitos e bonitos. Depois de algumas pesquisas, encontramos <a href="http://themes.alessioatzeni.com/html/brushed/">Brushed</a>.</p>
+<p>A partir do template, trocamos as imagens do slideshow por imagens de Porto, refizemos os textos, e trocamos o formulário de contato por um de pagamento. O site inteiro foi feito de forma estática, em HTML puro, e ele interagiria com uma aplicação que salvaria os dados e redirecionaria para o gateway de pagamento.</p>
+<p>Embora esta parte tenha gastado tempo significativo, não há muito mais de interessante para contar. É trabalhoso, mas não é meu forte, e há vários lugares que poderiam receber uma bela refatoração e otimização. Se algum designer ou programador front-end analisar meu código desta parte, peço perdão desde já :P</p>
+<h2 id="desenvolvendo-a-aplicação-back-end">Desenvolvendo a aplicação back-end</h2>
+<p>Sem surpresas por aqui - utilizei a fantástica framework MVC <a href="https://metacpan.org/pod/Catalyst">Catalyst</a> para desenvolver a aplicação com um banco de dados PostgreSQL, versionado por <a href="https://sqitch.org">sqitch</a>, acessado por <a href="https://metacpan.org/pod/DBIx::Class">DBIx::Class</a>.</p>
+<p>A aplicação teria o propósito de:</p>
+<ul>
+<li>Salvar os dados do “comprador”;</li>
+<li>Redirecioná-lo para a página de pagamentos;</li>
+<li>Alterar status dos pagamentos após confirmação do intermediador (eg. PayPal);</li>
+<li>Enviar e-mails com a confirmação de recebimento da rifa;</li>
+</ul>
+<p>Você pode checar o resultado final aqui: <a href="https://github.com/andrewalker/p5-porto6-web" class="uri">https://github.com/andrewalker/p5-porto6-web</a>.</p>
+<p>O fluxo completo, então, ficou assim:</p>
+<ul>
+<li>O usuário submete o formulário com os dados;</li>
+<li>uma requisição ajax é feita para <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Web/Controller/Checkout.pm">/place_order</a>;</li>
+<li>se a requisição foi bem sucedida, o id do pagamento (que é um UUID gerado pela aplicação) é devolvido para o javascript, que redireciona o usuário para <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Web/Controller/Redirect.pm">/redirect/:payment_id</a>;</li>
+<li>caso o pagamento seja via depósito, em vez disso, o usuário é redirecionado para <a href="https://seismesesnoporto.ga/deposit.html">deposit.html</a>;</li>
+<li>De tempos em tempos, uma tarefa cron aciona o método <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/AfterSales.pm#L144">update_all</a>, que atualiza os status dos pagamentos, e outra tarefa cron aciona o método <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/AfterSales.pm#L226">send_payment_received_mails</a>, que envia e-mails a quem está com status de pago;</li>
+</ul>
+<p>De forma que o fluxo dos status é o seguinte:</p>
+<pre><code>new -&gt; waiting -&gt; payed -&gt; sent-email
+   \         \
+    \         \-&gt; failed
+     \
+      \-&gt; expired</code></pre>
+<p><code>new</code> é o primeiro status de um pedido, assim que ele foi recebido por nós, antes de a pessoa ser redirecionada ao intermediador de pagamentos. Quando o intermediador fica sabendo da existência desse pagamento, o status muda imediatamente para <code>waiting</code>. Se um status fica em <code>new</code> por 24 horas, vai para <code>expired</code>. Por outro lado, o pedido fica em <code>waiting</code> até que o intermediador de pagamentos altere seu status.</p>
+<p>Por fim, os e-mails são enviados usando <a href="https://metacpan.org/pod/Email::Sender::Manual::QuickStart">Email::Sender::Simple</a> e <a href="https://metacpan.org/pod/Email::MIME">Email::MIME</a>, na classe <a href="https://github.com/andrewalker/p5-porto6-web/blob/master/lib/Porto6/Mailer.pm">Porto6::Mailer</a>. Toda a configuração do servidor SMTP a ser usado, bem como as credenciais, são por meio de variáveis de ambiente.</p>
+<p>A comunicação com os intermediadores de pagamento PayPal e PagSeguro são feitas por meio do bom e velho Business::CPI. Porém, pude perceber que este meu módulo precisa de bastante atenção :) Fica para um outro post.</p>
+<h2 id="a-publicação">A publicação</h2>
+<p>Agora a parte boa: como pus tudo isso no ar de graça?</p>
+<p>Comecemos pelo domínio: você deve ter se perguntado de onde vem esse “.ga”. Pois bem, é o <a href="https://en.wikipedia.org/wiki/.ga">domínio de Gabão</a>, assim como o br é do Brasil. Se a falta de conexão do site “Seis Meses no Porto” com Gabão lhe incomodar, lembre-se de quantos sites não-comerciais usam o .com :P</p>
+<p>Enfim, domínios .ga são <a href="http://www.freenom.com/en/index.html">oferecidos gratuitamente</a>.</p>
+<p>Além disso, utilizei <a href="https://www.cloudflare.com/">CloudFlare</a> para gerenciar o domínio. Isto me deu uma série de vantagens:</p>
+<ul>
+<li>um bom serviço DNS (sempre muito importante, não menospreze esta parte!);</li>
+<li><a href="https://pt.wikipedia.org/wiki/Content_Delivery_Network">distribuição global</a>;</li>
+<li>sistema de cache;</li>
+<li>certificado SSL gratuito;</li>
+</ul>
+<p>De cara, já resolvi um monte de problemas.</p>
+<p>O e-mail eu hospedei em um servidor próprio, no mesmo do <a href="https://andrewalker.net">andrewalker.net</a>. Se eu não tivesse este servidor, poderia ter utilizado um serviço de hospedagem de e-mails gratuito com domínio customizado como o <a href="https://www.zoho.com">zoho.com</a>. Isto não é tão fácil de se encontrar como se pode imaginar, já que Google Apps é pago, e a maioria dos provedores de e-mail gratuitos não permitem domínios customizados.</p>
+<p>A aplicação back-end eu hospedei utilizando <a href="https://www.heroku.com/">heroku</a>, com o <a href="https://github.com/miyagawa/heroku-buildpack-perl">buildpack do miyagawa</a>. Isto me possibilitou SSL entre CloudFlare e a aplicação, para sigilo completo dos dados, além de um deploy simples e rápido, com <a href="https://devcenter.heroku.com/articles/dataclips">ferramentas ótimas para relatórios rápidos</a>.</p>
+<p>Por fim, os e-mails foram enviados utilizando <a href="https://mandrillapp.com/">Mandrill</a>, que é gratuito para até 12 mil e-mails por dia. Diminui drasticamente as chances dos e-mails irem para spam, ou outros problemas similares. Além de mostrar gráficos legais sobre quem abriu os e-mails, etc.</p>
+<p>As tarefas cron, como para mudar status de pagamentos, etc, eram disparadas de um servidor próprio, que simplesmente acessavam URL’s via wget na aplicação back-end. Poderia ter sido feito com <a href="https://www.pingdom.com">Pingdom</a>, caso eu não tivesse o servidor.</p>
+<p>Por fim, utilizei <a href="https://getclicky.com">Clicky</a> para acompanhar o número de visitantes no site. Mais hipster que Google Analytics :P</p>
+<p>Caso queira ganhar um quadro, então, não perca tempo! Dia 07/02 será feito o sorteio!</p>
+<p><a href="https://seismesesnoporto.ga" class="uri">https://seismesesnoporto.ga</a></p>]]></summary>
+</entry>
+<entry>
+    <title>Encontrando arquivos removidos do Transmission</title>
+    <link href="https://andrewalker.net/posts/2014-11-26-encontrando-arquivos-removidos-transmission.html" />
+    <id>https://andrewalker.net/posts/2014-11-26-encontrando-arquivos-removidos-transmission.html</id>
+    <published>2014-11-26T00:00:00Z</published>
+    <updated>2014-11-26T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Como 50 linhas de Perl salvaram o dia mais uma vez.</p>
+<p>Tenho um <a href="http://www.raspberrypi.org/">Raspberry PI</a> em meu escritório com o programa de bittorrent <a href="https://www.transmissionbt.com/">Transmission</a> rodando dia e noite, conectado a um HD externo. Por um descuido meu, os downloads acabaram lotando o HD externo.</p>
+<!--more-->
+<p>Pois bem, como havia muitos downloads que eu não precisava mais, fui removendo cada torrent utilizando o aplicativo para Android do Transmission, marcando sempre a opção de remover também os arquivos associados a eles. No entanto, por algum motivo, isso não funcionou. Os torrents foram removidos do Transmission, mas os arquivos continuaram no HD, e o espaço livre continuava 0 bytes.</p>
+<p>E neste momento eu tinha um problema… porque eu já havia removido cerca de 60Gb que continuavam lá, ocupando meu precioso espaço em disco. Como fazer para apenas esses arquivos já desassociados do Transmission serem excluídos de fato?</p>
+<p>Eu precisava então de duas listagens: a primeira, com todos os arquivos dentro da pasta de downloads, recursivamente; segundo, os arquivos de todos os torrents que o Transmission conhecia, pois estes eu precisava manter. Fazendo a diferença da primeira com a segunda, eu encontraria a listagem de arquivos da pasta de downloads que o Transmission não conhecia <em>mais</em>, e que portanto eu poderia apagar.</p>
+<p>Primeiro tentei investigar <code>transmission-remote</code>, mas ele não retornava os arquivos de forma que eu pudesse manipular de forma fácil.</p>
+<p>Assim, apelei para o bom e velho Perl.</p>
+<p>Segue a primeira função então, para buscar todos os arquivos da pasta de downloads, recursivamente:</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">File::Find</span>;
+
+<span class="kw">sub </span><span class="fu">all_files_in_folder</span> {
+    <span class="kw">my</span> (<span class="dt">$directory</span>) = <span class="dt">@_</span>;
+
+    <span class="kw">my</span> <span class="dt">@result</span>;
+
+    find(<span class="kw">sub </span>{
+        <span class="kw">my</span> <span class="dt">$filename</span> = <span class="dt">$File</span>::<span class="dt">Find</span>::<span class="dt">name</span>;
+        <span class="fu">push</span> <span class="dt">@result</span>, <span class="dt">$filename</span> <span class="kw">if</span> <span class="kw">-f</span> <span class="dt">$filename</span>;
+    }, <span class="dt">$directory</span>);
+
+    <span class="kw">return</span> <span class="dt">@result</span>;
+}</code></pre></div>
+<p>Depois disso, preciso da listagem dos arquivos que o Transmission ainda conhece.</p>
+<p>Há dois módulos que acessavam a interface remota do Transmission: <a href="https://metacpan.org/pod/P2P::Transmission::Remote">P2P::Transmission::Remote</a> e <a href="https://metacpan.org/pod/Transmission::Client">Transmission::Client</a>. Acabei optando por esta última, porque aquela não me dava um acessor para <code>files</code>.</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">Transmission::Client</span>;
+<span class="fu">use</span> <span class="fu">File::Spec</span>::<span class="fu">Functions</span>;
+
+<span class="kw">sub </span><span class="fu">all_torrent_files</span> {
+    <span class="kw">my</span> <span class="dt">$client</span> = <span class="fu">Transmission::Client</span>-&gt;new(
+        username =&gt; <span class="kw">&#39;</span><span class="st">my-username</span><span class="kw">&#39;</span>,
+        password =&gt; <span class="kw">&#39;</span><span class="st">123456</span><span class="kw">&#39;</span>,
+        url      =&gt; <span class="kw">&#39;</span><span class="st">http://1.2.3.4:9091/transmission/rpc</span><span class="kw">&#39;</span>,
+        autodie  =&gt; <span class="dv">1</span>
+    );
+
+    <span class="kw">my</span> <span class="dt">%result</span>;
+
+    <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$torrent</span> ( <span class="dt">@</span>{ <span class="dt">$client</span>-&gt;<span class="dt">torrents</span> } ) {
+        <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> ( <span class="dt">@</span>{ <span class="dt">$torrent</span>-&gt;<span class="dt">files</span> } ) {
+            <span class="kw">my</span> <span class="dt">$key</span> = catfile( <span class="dt">$torrent</span>-&gt;<span class="dt">download_dir</span>, <span class="dt">$file</span>-&gt;<span class="dt">name</span> );
+
+            <span class="dt">$result</span>{<span class="dt">$key</span>} = <span class="dv">1</span>;
+        }
+    }
+
+    <span class="kw">return</span> <span class="dt">%result</span>;
+}</code></pre></div>
+<p>Note que aqui retorno um hash <code>%result</code>, com todas as chaves associadas ao valor <code>1</code>, porque quero apenas verificar se uma determinada chave está no hash. Se eu utilizasse array, precisaria percorrer o array toda vez que fosse procurar por um nome de arquivo, o que seria muito mais lento.</p>
+<p>Finalmente, resta apenas chamar as funções:</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="kw">my</span> <span class="dt">@folder</span>        = all_files_in_folder(<span class="kw">&#39;</span><span class="st">/path/to/downloads</span><span class="kw">&#39;</span>);
+<span class="kw">my</span> <span class="dt">%torrent_files</span> = all_torrent_files();
+
+<span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> (<span class="dt">@folder</span>) {
+
+    <span class="co"># se o arquivo não está na listagem de torrents</span>
+    <span class="kw">if</span> (!<span class="dt">$torrent_files</span>{<span class="dt">$file</span>}) {
+        say <span class="kw">&quot;</span><span class="st">rm &#39;</span><span class="dt">$file</span><span class="kw">&#39;&quot;</span>; <span class="co"># não remove, apenas escreve na tela</span>
+    }
+
+}</code></pre></div>
+<p>Para remover de fato, poderíamos substituir o <code>say</code> por <code>unlink $file</code>.</p>
+<p>Isto evidentemente gerará uma série de diretórios vazios, porque a remoção não é recursiva, é apenas dos arquivos. Para remover os diretórios vazios depois, pode-se utilizar o comando <code>find</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    $ <span class="kw">find</span> /path/to/downloads -empty -type d -delete</code></pre></div>]]></summary>
+</entry>
+<entry>
+    <title>Apresentação</title>
+    <link href="https://andrewalker.net/posts/2014-11-14-apresentacao.html" />
+    <id>https://andrewalker.net/posts/2014-11-14-apresentacao.html</id>
+    <published>2014-11-14T00:00:00Z</published>
+    <updated>2014-11-14T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Este site já teve inúmeras caras, um punhado de versões, e alguns propósitos diferentes. Existe desde 2005, quando eu fazia meus primeiros experimentos com programação. Esta versão existe há menos de uma semana, com meus primeiros experimentos (reais) com Haskell.</p>
+<!--more-->
+<p>Um objetivo constante foi o de me desenvolver tecnicamente, e expor aquilo que estudo. Permanece um dos principais objetivos do blog.</p>
+<p>Não vou me prolongar muito nesta apresentação inicial, pois ainda estou concentrado em fazer tudo funcionar, e encaixar todas as partes. Deixarei algumas páginas com um texto genérico apenas enquanto termino esta parte técnica.</p>
+<p>Em seguida, irei fazer algumas postagens explicando alguns pontos interessantes sobre a experiência destes últimos dias com a [re] construção do site. Estou utilizando ferramentas fantásticas, como <a href="http://jaspervdj.be/hakyll/">Hakyll</a> em Haskell, a infraestrutura completa da Amazon, integração contínua com <a href="https://travis-ci.org/andrewalker/hakyll-awn">Travis CI</a>, e um repositório público no <a href="https://github.com/andrewalker/hakyll-awn">Github</a>. Extremamente <em>“overkill”</em> para minha necessidade, se considerado meramente o conteúdo a ser publicado, mas totalmente relevante se considerado o propósito de aprendizado e demonstração.</p>
+<p>Por fim, quero aproveitar este espaço do site para publicar temas diversos que considero relevantes, relacionados a arte, política, cultura e opinião. Pretendo deixar o número de publicações equilibrado entre computação e assuntos diversos, e quero manter uma frequência mais ou menos constante, com pelo menos uma publicação por semana.</p>
+<p>Acompanhe! :)</p>
+<pre><code>    :wq</code></pre>]]></summary>
+</entry>
+
+</feed>

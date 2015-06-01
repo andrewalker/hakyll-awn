@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="iem7"><![endif]-->
+<!--[if lt IE 9]><html class="lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html lang="pt-br"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Encontrando arquivos removidos do Transmission - andrewalker.net</title>
+  <link href="../1433162548/style.css" rel="stylesheet" type="text/css">
+</head>
+<body class="no-sidebar">
+  <header role="banner">
+    <hgroup>
+      <h1><a href="../">andrewalker.net</a></h1>
+    </hgroup>
+  </header>
+  <nav role="navigation">
+    <ul class="subscribe">
+      <li><a href="https://twitter.com/andrewalkernet" rel="subscribe-twitter" title="andrewalker no Twitter" class="webicon twitter">andrewalker no Twitter</a></li>
+      <li><a href="https://github.com/andrewalker" rel="subscribe-github" title="andrewalker no GitHub" class="webicon github">andrewalker no GitHub</a></li>
+      <li><a href="https://linkedin.com/in/andrewalker" rel="subscribe-linkedin" title="andrewalker no LinkedIn" class="webicon linkedin">andrewalker no LinkedIn</a></li>
+      <li><a href="mailto:andre+website@andrewalker.net" rel="subscribe-mail" title="e-mail" class="webicon mail">e-mail</a></li>
+      <li><a href="../atom.xml" rel="subscribe-rss" title="Assine o RSS" class="webicon rss">Assine o RSS</a></li>
+    </ul>
+    <ul class="main-navigation">
+        <li><a href="../">Home</a></li>
+        <li><a href="../cv.pdf">Curriculum</a></li>
+        <li><a href="../about.html">Sobre</a></li>
+    </ul>
+  </nav>
+  <div id="main">
+    <div id="content">
+        <div>
+    <article class="hentry" role="article">
+         <header>
+            <h1 class="entry-title">Encontrando arquivos removidos do Transmission</h1>
+            <p class="meta">
+                <time class="entry-date" datetime="2014-11-26"><span class="date">26 de Novembro, 2014</span></time>
+              | <a href="#disqus_thread">comentários</a>
+            </p>
+        </header>
+        <div class="entry-content"><p>Como 50 linhas de Perl salvaram o dia mais uma vez.</p>
+<p>Tenho um <a href="http://www.raspberrypi.org/">Raspberry PI</a> em meu escritório com o programa de bittorrent <a href="https://www.transmissionbt.com/">Transmission</a> rodando dia e noite, conectado a um HD externo. Por um descuido meu, os downloads acabaram lotando o HD externo.</p>
+<!--more-->
+<p>Pois bem, como havia muitos downloads que eu não precisava mais, fui removendo cada torrent utilizando o aplicativo para Android do Transmission, marcando sempre a opção de remover também os arquivos associados a eles. No entanto, por algum motivo, isso não funcionou. Os torrents foram removidos do Transmission, mas os arquivos continuaram no HD, e o espaço livre continuava 0 bytes.</p>
+<p>E neste momento eu tinha um problema… porque eu já havia removido cerca de 60Gb que continuavam lá, ocupando meu precioso espaço em disco. Como fazer para apenas esses arquivos já desassociados do Transmission serem excluídos de fato?</p>
+<p>Eu precisava então de duas listagens: a primeira, com todos os arquivos dentro da pasta de downloads, recursivamente; segundo, os arquivos de todos os torrents que o Transmission conhecia, pois estes eu precisava manter. Fazendo a diferença da primeira com a segunda, eu encontraria a listagem de arquivos da pasta de downloads que o Transmission não conhecia <em>mais</em>, e que portanto eu poderia apagar.</p>
+<p>Primeiro tentei investigar <code>transmission-remote</code>, mas ele não retornava os arquivos de forma que eu pudesse manipular de forma fácil.</p>
+<p>Assim, apelei para o bom e velho Perl.</p>
+<p>Segue a primeira função então, para buscar todos os arquivos da pasta de downloads, recursivamente:</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">File::Find</span>;
+
+<span class="kw">sub </span><span class="fu">all_files_in_folder</span> {
+    <span class="kw">my</span> (<span class="dt">$directory</span>) = <span class="dt">@_</span>;
+
+    <span class="kw">my</span> <span class="dt">@result</span>;
+
+    find(<span class="kw">sub </span>{
+        <span class="kw">my</span> <span class="dt">$filename</span> = <span class="dt">$File</span>::<span class="dt">Find</span>::<span class="dt">name</span>;
+        <span class="fu">push</span> <span class="dt">@result</span>, <span class="dt">$filename</span> <span class="kw">if</span> <span class="kw">-f</span> <span class="dt">$filename</span>;
+    }, <span class="dt">$directory</span>);
+
+    <span class="kw">return</span> <span class="dt">@result</span>;
+}</code></pre></div>
+<p>Depois disso, preciso da listagem dos arquivos que o Transmission ainda conhece.</p>
+<p>Há dois módulos que acessavam a interface remota do Transmission: <a href="https://metacpan.org/pod/P2P::Transmission::Remote">P2P::Transmission::Remote</a> e <a href="https://metacpan.org/pod/Transmission::Client">Transmission::Client</a>. Acabei optando por esta última, porque aquela não me dava um acessor para <code>files</code>.</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">Transmission::Client</span>;
+<span class="fu">use</span> <span class="fu">File::Spec</span>::<span class="fu">Functions</span>;
+
+<span class="kw">sub </span><span class="fu">all_torrent_files</span> {
+    <span class="kw">my</span> <span class="dt">$client</span> = <span class="fu">Transmission::Client</span>-&gt;new(
+        username =&gt; <span class="kw">'</span><span class="st">my-username</span><span class="kw">'</span>,
+        password =&gt; <span class="kw">'</span><span class="st">123456</span><span class="kw">'</span>,
+        url      =&gt; <span class="kw">'</span><span class="st">http://1.2.3.4:9091/transmission/rpc</span><span class="kw">'</span>,
+        autodie  =&gt; <span class="dv">1</span>
+    );
+
+    <span class="kw">my</span> <span class="dt">%result</span>;
+
+    <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$torrent</span> ( <span class="dt">@</span>{ <span class="dt">$client</span>-&gt;<span class="dt">torrents</span> } ) {
+        <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> ( <span class="dt">@</span>{ <span class="dt">$torrent</span>-&gt;<span class="dt">files</span> } ) {
+            <span class="kw">my</span> <span class="dt">$key</span> = catfile( <span class="dt">$torrent</span>-&gt;<span class="dt">download_dir</span>, <span class="dt">$file</span>-&gt;<span class="dt">name</span> );
+
+            <span class="dt">$result</span>{<span class="dt">$key</span>} = <span class="dv">1</span>;
+        }
+    }
+
+    <span class="kw">return</span> <span class="dt">%result</span>;
+}</code></pre></div>
+<p>Note que aqui retorno um hash <code>%result</code>, com todas as chaves associadas ao valor <code>1</code>, porque quero apenas verificar se uma determinada chave está no hash. Se eu utilizasse array, precisaria percorrer o array toda vez que fosse procurar por um nome de arquivo, o que seria muito mais lento.</p>
+<p>Finalmente, resta apenas chamar as funções:</p>
+<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="kw">my</span> <span class="dt">@folder</span>        = all_files_in_folder(<span class="kw">'</span><span class="st">/path/to/downloads</span><span class="kw">'</span>);
+<span class="kw">my</span> <span class="dt">%torrent_files</span> = all_torrent_files();
+
+<span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> (<span class="dt">@folder</span>) {
+
+    <span class="co"># se o arquivo não está na listagem de torrents</span>
+    <span class="kw">if</span> (!<span class="dt">$torrent_files</span>{<span class="dt">$file</span>}) {
+        say <span class="kw">&quot;</span><span class="st">rm '</span><span class="dt">$file</span><span class="kw">'&quot;</span>; <span class="co"># não remove, apenas escreve na tela</span>
+    }
+
+}</code></pre></div>
+<p>Para remover de fato, poderíamos substituir o <code>say</code> por <code>unlink $file</code>.</p>
+<p>Isto evidentemente gerará uma série de diretórios vazios, porque a remoção não é recursiva, é apenas dos arquivos. Para remover os diretórios vazios depois, pode-se utilizar o comando <code>find</code>:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    $ <span class="kw">find</span> /path/to/downloads -empty -type d -delete</code></pre></div></div>
+    </article>
+    <section>
+        <h1>Comentários</h1>
+        <div id="disqus_thread" aria-live="polite"><noscript>Por favor, habilite javascript para visualizar <a href="http://disqus.com/?ref_noscript">comentários do Disqus.</a></noscript>
+        </div>
+    </section>
+</div>
+
+    </div>
+  </div>
+  <footer role="contentinfo">
+    <p>Copyright &copy; 2014, 2015 - André Walker -
+    <span class="credit">
+        Baseado no tema <a href="https://github.com/lucaslew/whitespace" target="_blank">Whitespace</a>,
+        adaptado para <a href="http://jaspervdj.be/hakyll/" target="_blank">Hakyll</a>.
+    </span>
+    </p>
+  </footer>
+  <script src="../1433162548/js/modernizr.js"></script>
+  <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='count.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
+  <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
+
+  <script type="text/javascript">
+    var clicky_site_ids = clicky_site_ids || [];
+    clicky_site_ids.push(66564894);
+    (function() {
+        var s = document.createElement('script');
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = '//static.getclicky.com/js';
+        ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+    })();
+  </script>
+  <noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/66564894ns.gif" /></p></noscript>
+</body>
+</html>
