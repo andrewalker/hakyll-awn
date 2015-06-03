@@ -43,3 +43,5 @@ script:
  - cabal configure
  - cabal run build
  - cabal run check
+
+after_success: ./bin/deploy
