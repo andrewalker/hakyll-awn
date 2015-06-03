@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ "$TRAVIS_REPO_SLUG" == "andrewalker/hakyll-awn" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ] && [ "$TRAVIS_BRANCH" == "master" ]; then
+
+    echo -e "Publishing website for commit $TRAVIS_COMMIT...\n"
+
+    cp -R _site $HOME/result
+
+    cd $HOME
+
+    git config --global user.email "travis@travis-ci.org"
+    git config --global user.name "travis-ci"
+    git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/andrewalker/hakyll-awn gh-pages > /dev/null
+
+    cd gh-pages
+
+    built_before=`git log --grep="$TRAVIS_COMMIT" | wc -l`
+
+    if [ $built_before -eq 0 ]; then
+        git rm -rf *
+        cp -Rf $HOME/result/* ./
+        git add -f .
+        git commit -m "Build for $TRAVIS_COMMIT"
+        git push -fq origin gh-pages > /dev/null
+        echo "Done."
+    else
+        echo "Already built -- nothing to do."
+    fi
+
+fi
