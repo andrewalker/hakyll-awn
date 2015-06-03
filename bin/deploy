@@ -27,4 +27,39 @@ if [ "$TRAVIS_REPO_SLUG" == "andrewalker/hakyll-awn" ] && [ "$TRAVIS_PULL_REQUES
         echo "Already built -- nothing to do."
     fi
 
+elif [[ $(git status --porcelain) ]]; then
+
+    echo "Git tree is dirty. Commit before deploying."
+
+elif [[ ! -d _site ]]; then
+
+    echo "The site is not built yet. Wouldn't you like to build it first?"
+    echo "Tip: cabal run build"
+
+elif [[ -z "$TRAVIS" && -z "$CI" ]]; then
+
+    COMMIT=`git rev-parse HEAD`
+
+    cp -R _site /tmp/result
+
+    git clone --quiet --branch=gh-pages git@github.com:andrewalker/hakyll-awn.git /tmp/gh-pages > /dev/null
+
+    cd /tmp/gh-pages
+
+    built_before=`git log --grep="$COMMIT" | wc -l`
+
+    if [ $built_before -eq 0 ]; then
+        git rm -rf *
+        cp -Rf /tmp/result/* ./
+        git add -f .
+        git commit -m "Build for $COMMIT"
+        git push -q origin gh-pages > /dev/null
+        echo "Done."
+    else
+        echo "Already built -- nothing to do."
+    fi
+
+    rm -rf /tmp/result
+    rm -rf /tmp/gh-pages
+
 fi
