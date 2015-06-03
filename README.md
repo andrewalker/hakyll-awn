@@ -14,16 +14,14 @@ a [Haskell Platform](https://www.haskell.org/platform/).
 $ cabal sandbox init
 $ cabal configure
 $ cabal build
-$ ./reload.sh
-
-```
-
-Em outro shell:
-
-``` shell
-
+$ cabal run rebuild
 $ cabal run server
 
 ```
 
 Acesse [http://localhost:8000](http://localhost:8000) e navegue pelo site!
+
+## Desenvolvimento
+
+Caso deseje alterar algo utilize `./bin/watch`, e deixe `cabal run server`
+rodando em outra shell.
