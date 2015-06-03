@@ -17,7 +17,6 @@ if [ "$TRAVIS_REPO_SLUG" == "andrewalker/hakyll-awn" ] && [ "$TRAVIS_PULL_REQUES
     built_before=`git log --grep="$TRAVIS_COMMIT" | wc -l`
 
     if [ $built_before -eq 0 ]; then
-        git rm -rf *
         cp -Rf $HOME/result/* ./
         git add -f .
         git commit -m "Build for $TRAVIS_COMMIT"
@@ -49,7 +48,6 @@ elif [[ -z "$TRAVIS" && -z "$CI" ]]; then
     built_before=`git log --grep="$COMMIT" | wc -l`
 
     if [ $built_before -eq 0 ]; then
-        git rm -rf *
         cp -Rf /tmp/result/* ./
         git add -f .
         git commit -m "Build for $COMMIT"
