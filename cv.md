@@ -96,8 +96,9 @@ more flexible than most migration-style approaches.
 
 I use Linux exclusively for my personal computer and servers for around 10
 years. I set up a personal mail server using Postfix and Dovecot, and my
-personal website with Amazon S3, CloudFront and Route 53. I am very confortable
-with the Linux command line and tools.
+personal website with a custom GitHub Pages setup, having previously used for a
+while Amazon S3, CloudFront and Route 53. I am very confortable with the Linux
+command line and tools.
 
 I have configured a few Apache, lighttpd and cherokee webservers in the past,
 but I am currently much more fond of nginx.
