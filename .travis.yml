@@ -15,18 +15,12 @@ addons:
         packages:
             - cabal-install-1.22
             - ghc-7.10.1
-            - texlive-full
-# As neither `lmodern` nor `context` is whitelisted at time of
-# writing (2015-05-30) our only choice is installing texlive-full
-# to obtain them
-# https://github.com/travis-ci/apt-package-whitelist/blob/master/ubuntu-precise
-#
-# If in the future this is solved, we only need these packages:
-#           - texlive-latex-base
-#           - texlive-latex-recommended
-#           - texlive-latex-extra
-#           - texlive-fonts-recommended
-#           - texlive-fonts-extra
+            - lmodern
+            - texlive-latex-base
+            - texlive-latex-recommended
+            - texlive-latex-extra
+            - texlive-fonts-recommended
+            - texlive-fonts-extra
 
 before_install:
  - texconfig font rw
