@@ -144,7 +144,7 @@
 }</code></pre></div>
 <p>Para remover de fato, poderíamos substituir o <code>say</code> por <code>unlink $file</code>.</p>
 <p>Isto evidentemente gerará uma série de diretórios vazios, porque a remoção não é recursiva, é apenas dos arquivos. Para remover os diretórios vazios depois, pode-se utilizar o comando <code>find</code>:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    $ <span class="kw">find</span> /path/to/downloads -empty -type d -delete</code></pre></div>]]></summary>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    $ <span class="fu">find</span> /path/to/downloads -empty -type d -delete</code></pre></div>]]></summary>
 </entry>
 <entry>
     <title>Apresentação</title>
