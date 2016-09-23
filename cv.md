@@ -20,7 +20,7 @@ operating system called SailfishOS.
 
 ## Work Experience
 
-### Booking.com **(September 2016 - present)**
+### Booking.com **(September 2015 - present)**
 
 I relocated to Amsterdam to work for the world leader in accomodation booking
 online.
