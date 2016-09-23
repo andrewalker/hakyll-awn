@@ -2,7 +2,7 @@
 
 ## Summary
 
-I'm a 24 year old software developer, and a passionate programmer since I was
+I'm a 25 year old software developer, and a passionate programmer since I was
 13.
 
 I have a solid understanding of Perl, as well as most of the main libraries and
@@ -15,13 +15,23 @@ I've written a fair amount of code in Java and C, mostly for learning purposes.
 I have a good knowledge of front-end languages for the web, like HTML,
 JavaScript and CSS, and I have also worked for a few years with PHP.
 
-One of my latest personal projects was setting up a media center and file
-server with a couple of single board computers, which I am still constantly
-tweaking.
+One of my recent hobbies has been to tweak and experiment with a mobile
+operating system called SailfishOS.
 
 ## Work Experience
 
-### Estante Virtual **(January 2014 - present)**
+### Booking.com **(September 2016 - present)**
+
+I relocated to Amsterdam to work for the world leader in accomodation booking
+online.
+
+Booking.com has a big IT department, and there are opportunities to work on
+different systems inside the company. One that was particularly interesting was
+the partner to guest communication, which was mostly an email gateway. I helped
+maintain and developed it for a few months, and later we integrated it into a
+new chat system developed in-house.
+
+### Estante Virtual **(January 2014 - July 2015)**
 
 Estante Virtual is a Brazilian e-commerce with the largest collection of used
 books in the country. It works as a reseller of third-party bookstores.
@@ -30,9 +40,6 @@ My role was mostly focused on the shopping cart and processing payments, both
 for new features and maintenance of the code. I was responsible for developing
 a library to interface a new payment gateway that would be integrated in the
 website.
-
-I faced a series of interesting challenges in the job, ranging from scalability
-to security, because of the volume of traffic and sales.
 
 ### Google Summer of Code **(May 2011 - August 2011)**
 
@@ -69,22 +76,21 @@ worked on a couple of Delphi projects.
 
 ### Programming
 
-In Perl, I have experience with object oriented programming with Moose, Moo,
-and with the native Perl OO. I have maintained legacy Perl CGI scripts and
-mod\_perl systems, and I have created and maintained modern Catalyst
-applications and web services, deployed with Starman and nginx.
+I good experience with Perl. I have maintained legacy CGI scripts and mod\_perl
+systems, and I have created and maintained modern Catalyst applications and web
+services, deployed with Starman and nginx.
 
 While I am mostly a back-end developer, I have written and maintained
-JavaScript code. I have exposure to Dojo and jQuery, and I like the way
-AngularJS handles Inversion of Control and Dependency Injection.
+JavaScript code. I like the way AngularJS handles Inversion of Control and
+Dependency Injection.
 
 I have also worked with PHP and some PHP-based software, such as WordPress and
 Magento, including the development of plugins and themes.
 
 During my 3 years of technical secondary school and 4 years of university, I
-wrote a large amount of C, Java and Pascal code. Recently, I've been studying
-and experimenting with Haskell and OCaml in my free time, and I love the strict
-typing and elegant solutions they provide.
+wrote a large amount of C, Java and Pascal code. I have also experimented with
+Haskell and OCaml in my free time, and I love the strict typing and elegant
+solutions they provide.
 
 ### Databases
 
@@ -100,8 +106,8 @@ personal website with a custom GitHub Pages setup, having previously used for a
 while Amazon S3, CloudFront and Route 53. I am very confortable with the Linux
 command line and tools.
 
-I have configured a few Apache, lighttpd and cherokee webservers in the past,
-but I am currently much more fond of nginx.
+I have configured several different webservers in the past, and I am currently
+very fond of nginx.
 
 ## Open Source and Community
 
