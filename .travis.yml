@@ -13,8 +13,8 @@ addons:
         sources:
             - hvr-ghc
         packages:
-            - cabal-install-1.22
-            - ghc-7.10.1
+            - cabal-install-1.24
+            - ghc-8.0.1
             - lmodern
             - texlive-latex-base
             - texlive-latex-recommended
@@ -24,7 +24,7 @@ addons:
 
 before_install:
  - texconfig font rw
- - export PATH=$HOME/.cabal/bin:/opt/ghc/7.10.1/bin:/opt/cabal/1.22/bin:$PATH
+ - export PATH=$HOME/.cabal/bin:/opt/ghc/8.0.1/bin:/opt/cabal/1.24/bin:$PATH
 
 install:
  - cabal --version
