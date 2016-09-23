@@ -2,18 +2,18 @@
     font-family: 'Lora';
     font-style: normal;
     font-weight: 400;
-    src: local('Lora'), local('Lora-Regular'), url(/fonts/Lora.woff) format('woff');
+    src: local('Lora'), local('Lora-Regular'), url(fonts/Lora.woff) format('woff');
 }
 @font-face {
     font-family: 'Bree Serif';
     font-style: normal;
     font-weight: 400;
-    src: local('Bree Serif'), local('BreeSerif-Regular'), url(/fonts/BreeSerif.woff) format('woff');
+    src: local('Bree Serif'), local('BreeSerif-Regular'), url(fonts/BreeSerif.woff) format('woff');
 }
 
 @font-face {
     font-family: 'Bubblegum Sans';
     font-style: normal;
     font-weight: 400;
-    src: local('Bubblegum Sans Regular'), local('BubblegumSans-Regular'), url(/fonts/BubblegumSans.woff) format('woff');
+    src: local('Bubblegum Sans Regular'), local('BubblegumSans-Regular'), url(fonts/BubblegumSans.woff) format('woff');
 }
