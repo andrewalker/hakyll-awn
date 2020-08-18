@@ -5,6 +5,8 @@
 /_cache/
 /_site/
 /dist/
+/dist-newstyle/
+/.stack-work/
 
 .cabal-sandbox/
 cabal.sandbox.config
