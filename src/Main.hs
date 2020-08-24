@@ -4,8 +4,10 @@
 module Main where
 
 import Data.Time.Clock.POSIX
-import Data.Monoid ((<>))
 import qualified Data.ByteString.Lazy as LB
+import qualified Data.Map as M
+import qualified Data.Text as DT
+import qualified Text.DocTemplates as DocT
 import Text.Pandoc
 import Text.Pandoc.PDF (makePDF)
 import System.FilePath
@@ -158,25 +160,18 @@ rulesWithStaticId staticId = do
     siteCtx' = siteCtx staticId
     assetsRoute' = assetsRoute staticId
 
-getPdfTemplate :: IO String
-getPdfTemplate = do
-    templ <- getDefaultTemplate Nothing "latex"
-    case templ of
-      Right t -> return t
-      Left e  -> error $ show e
 
 pdfCompiler :: Compiler (Item LB.ByteString)
 pdfCompiler = do
-    template <- unsafeCompiler getPdfTemplate
-
     content <- readPandoc =<< getResourceBody
 
-    res <- unsafeCompiler $ makePDF "pdflatex" writeLaTeX def
-        {
-          writerStandalone = True
-        , writerTemplate = template
-        , writerVariables = [("geometry", "margin=2cm")]
-        } (itemBody content)
+    res <- unsafeCompiler $ runIOorExplode $ do
+        templ <- compileDefaultTemplate (DT.pack "latex")
+        makePDF "pdflatex" [] writeLaTeX def
+           {
+              writerTemplate = Just templ,
+              writerVariables = DocT.Context $ M.fromList [(DT.pack "geometry", DocT.toVal $ DT.pack "margin=2cm")]
+           } (itemBody content)
 
     case res of
         Right pdf -> makeItem pdf
@@ -213,7 +208,7 @@ feedConfiguration = FeedConfiguration
     }
 
 getStaticId :: IO Integer
-getStaticId = round `fmap` getPOSIXTime
+getStaticId = round `fmap` Data.Time.Clock.POSIX.getPOSIXTime
 
 assetsRoute ::  Integer -> String -> Routes
 assetsRoute staticId folder = customRoute $ prefixPlus . takeFileName . toFilePath

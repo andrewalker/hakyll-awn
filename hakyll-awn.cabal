@@ -1,12 +1,16 @@
 name:               hakyll-awn
-version:            0.1.0.0
+version:            0.2.0.0
 build-type:         Simple
 cabal-version:      >= 1.10
 
 executable site
   main-is:          Main.hs
+  other-modules:    Portuguese
   build-depends:    base
-                  , hakyll == 4.8.*
+                  , containers
+                  , text
+                  , doctemplates
+                  , hakyll
                   , pandoc
                   , filepath
                   , bytestring
