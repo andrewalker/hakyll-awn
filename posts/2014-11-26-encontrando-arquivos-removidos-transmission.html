@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <title>Encontrando arquivos removidos do Transmission - andrewalker.net</title>
-  <link href="../1474661808/style.css" rel="stylesheet" type="text/css">
+  <link href="../1598361447/style.css" rel="stylesheet" type="text/css">
 </head>
 <body class="no-sidebar">
   <header role="banner">
@@ -47,61 +47,61 @@
 <p>Primeiro tentei investigar <code>transmission-remote</code>, mas ele não retornava os arquivos de forma que eu pudesse manipular de forma fácil.</p>
 <p>Assim, apelei para o bom e velho Perl.</p>
 <p>Segue a primeira função então, para buscar todos os arquivos da pasta de downloads, recursivamente:</p>
-<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">File::Find</span>;
-
-<span class="kw">sub </span><span class="fu">all_files_in_folder</span> {
-    <span class="kw">my</span> (<span class="dt">$directory</span>) = <span class="dt">@_</span>;
-
-    <span class="kw">my</span> <span class="dt">@result</span>;
-
-    find(<span class="kw">sub </span>{
-        <span class="kw">my</span> <span class="dt">$filename</span> = <span class="dt">$File</span>::<span class="dt">Find</span>::<span class="dt">name</span>;
-        <span class="fu">push</span> <span class="dt">@result</span>, <span class="dt">$filename</span> <span class="kw">if</span> <span class="kw">-f</span> <span class="dt">$filename</span>;
-    }, <span class="dt">$directory</span>);
-
-    <span class="kw">return</span> <span class="dt">@result</span>;
-}</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode perl"><code class="sourceCode perl"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="fu">use</span> <span class="fu">File::Find</span>;</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a><span class="kw">sub </span><span class="fu">all_files_in_folder</span> {</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>    <span class="kw">my</span> (<span class="dt">$directory</span>) = <span class="dt">@_</span>;</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>    <span class="kw">my</span> <span class="dt">@result</span>;</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>    find(<span class="kw">sub </span>{</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>        <span class="kw">my</span> <span class="dt">$filename</span> = <span class="dt">$File</span>::<span class="dt">Find</span>::<span class="dt">name</span>;</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a>        <span class="fu">push</span> <span class="dt">@result</span>, <span class="dt">$filename</span> <span class="kw">if</span> <span class="kw">-f</span> <span class="dt">$filename</span>;</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true"></a>    }, <span class="dt">$directory</span>);</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true"></a>    <span class="kw">return</span> <span class="dt">@result</span>;</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true"></a>}</span></code></pre></div>
 <p>Depois disso, preciso da listagem dos arquivos que o Transmission ainda conhece.</p>
 <p>Há dois módulos que acessavam a interface remota do Transmission: <a href="https://metacpan.org/pod/P2P::Transmission::Remote">P2P::Transmission::Remote</a> e <a href="https://metacpan.org/pod/Transmission::Client">Transmission::Client</a>. Acabei optando por esta última, porque aquela não me dava um acessor para <code>files</code>.</p>
-<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="fu">use</span> <span class="fu">Transmission::Client</span>;
-<span class="fu">use</span> <span class="fu">File::Spec</span>::<span class="fu">Functions</span>;
-
-<span class="kw">sub </span><span class="fu">all_torrent_files</span> {
-    <span class="kw">my</span> <span class="dt">$client</span> = <span class="fu">Transmission::Client</span>-&gt;new(
-        username =&gt; <span class="kw">'</span><span class="st">my-username</span><span class="kw">'</span>,
-        password =&gt; <span class="kw">'</span><span class="st">123456</span><span class="kw">'</span>,
-        url      =&gt; <span class="kw">'</span><span class="st">http://1.2.3.4:9091/transmission/rpc</span><span class="kw">'</span>,
-        autodie  =&gt; <span class="dv">1</span>
-    );
-
-    <span class="kw">my</span> <span class="dt">%result</span>;
-
-    <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$torrent</span> ( <span class="dt">@</span>{ <span class="dt">$client</span>-&gt;<span class="dt">torrents</span> } ) {
-        <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> ( <span class="dt">@</span>{ <span class="dt">$torrent</span>-&gt;<span class="dt">files</span> } ) {
-            <span class="kw">my</span> <span class="dt">$key</span> = catfile( <span class="dt">$torrent</span>-&gt;<span class="dt">download_dir</span>, <span class="dt">$file</span>-&gt;<span class="dt">name</span> );
-
-            <span class="dt">$result</span>{<span class="dt">$key</span>} = <span class="dv">1</span>;
-        }
-    }
-
-    <span class="kw">return</span> <span class="dt">%result</span>;
-}</code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode perl"><code class="sourceCode perl"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="fu">use</span> <span class="fu">Transmission::Client</span>;</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a><span class="fu">use</span> <span class="fu">File::Spec</span>::<span class="fu">Functions</span>;</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true"></a><span class="kw">sub </span><span class="fu">all_torrent_files</span> {</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true"></a>    <span class="kw">my</span> <span class="dt">$client</span> = <span class="fu">Transmission::Client</span>-&gt;new(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true"></a>        username =&gt; <span class="kw">'</span><span class="st">my-username</span><span class="kw">'</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true"></a>        password =&gt; <span class="kw">'</span><span class="st">123456</span><span class="kw">'</span>,</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true"></a>        url      =&gt; <span class="kw">'</span><span class="st">http://1.2.3.4:9091/transmission/rpc</span><span class="kw">'</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true"></a>        autodie  =&gt; <span class="dv">1</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true"></a>    );</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true"></a>    <span class="kw">my</span> <span class="dt">%result</span>;</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true"></a>    <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$torrent</span> ( <span class="dt">@</span>{ <span class="dt">$client</span>-&gt;<span class="dt">torrents</span> } ) {</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true"></a>        <span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> ( <span class="dt">@</span>{ <span class="dt">$torrent</span>-&gt;<span class="dt">files</span> } ) {</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true"></a>            <span class="kw">my</span> <span class="dt">$key</span> = catfile( <span class="dt">$torrent</span>-&gt;<span class="dt">download_dir</span>, <span class="dt">$file</span>-&gt;<span class="dt">name</span> );</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true"></a>            <span class="dt">$result</span>{<span class="dt">$key</span>} = <span class="dv">1</span>;</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true"></a>        }</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true"></a>    }</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true"></a>    <span class="kw">return</span> <span class="dt">%result</span>;</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true"></a>}</span></code></pre></div>
 <p>Note que aqui retorno um hash <code>%result</code>, com todas as chaves associadas ao valor <code>1</code>, porque quero apenas verificar se uma determinada chave está no hash. Se eu utilizasse array, precisaria percorrer o array toda vez que fosse procurar por um nome de arquivo, o que seria muito mais lento.</p>
 <p>Finalmente, resta apenas chamar as funções:</p>
-<div class="sourceCode"><pre class="sourceCode perl"><code class="sourceCode perl"><span class="kw">my</span> <span class="dt">@folder</span>        = all_files_in_folder(<span class="kw">'</span><span class="st">/path/to/downloads</span><span class="kw">'</span>);
-<span class="kw">my</span> <span class="dt">%torrent_files</span> = all_torrent_files();
-
-<span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> (<span class="dt">@folder</span>) {
-
-    <span class="co"># se o arquivo não está na listagem de torrents</span>
-    <span class="kw">if</span> (!<span class="dt">$torrent_files</span>{<span class="dt">$file</span>}) {
-        say <span class="kw">&quot;</span><span class="st">rm '</span><span class="dt">$file</span><span class="kw">'&quot;</span>; <span class="co"># não remove, apenas escreve na tela</span>
-    }
-
-}</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode perl"><code class="sourceCode perl"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">my</span> <span class="dt">@folder</span>        = all_files_in_folder(<span class="kw">'</span><span class="st">/path/to/downloads</span><span class="kw">'</span>);</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">my</span> <span class="dt">%torrent_files</span> = all_torrent_files();</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a><span class="kw">for</span> <span class="kw">my</span> <span class="dt">$file</span> (<span class="dt">@folder</span>) {</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>    <span class="co"># se o arquivo não está na listagem de torrents</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>    <span class="kw">if</span> (!<span class="dt">$torrent_files</span>{<span class="dt">$file</span>}) {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>        <span class="fu">say</span> <span class="kw">&quot;</span><span class="st">rm '</span><span class="dt">$file</span><span class="kw">'&quot;</span>; <span class="co"># não remove, apenas escreve na tela</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>    }</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>}</span></code></pre></div>
 <p>Para remover de fato, poderíamos substituir o <code>say</code> por <code>unlink $file</code>.</p>
 <p>Isto evidentemente gerará uma série de diretórios vazios, porque a remoção não é recursiva, é apenas dos arquivos. Para remover os diretórios vazios depois, pode-se utilizar o comando <code>find</code>:</p>
-<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">    $ <span class="fu">find</span> /path/to/downloads -empty -type d -delete</code></pre></div></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a>    $ <span class="fu">find</span> /path/to/downloads -empty -type d -delete</span></code></pre></div></div>
     </article>
     <section>
         <h1>Comentários</h1>
@@ -120,7 +120,7 @@
     </span>
     </p>
   </footer>
-  <script src="../1474661808/js/modernizr.js"></script>
+  <script src="../1598361447/js/modernizr.js"></script>
   <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='count.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
   <script type="text/javascript">var disqus_shortname='andrewalkernet';var disqus_script='embed.js';(function(){var dsq=document.createElement('script');dsq.type='text/javascript';dsq.async=true;dsq.src='//'+disqus_shortname+'.disqus.com/'+disqus_script;(document.getElementsByTagName('head')[0]||document.getElementsByTagName('body')[0]).appendChild(dsq);}());</script>
 
