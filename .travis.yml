@@ -1,41 +1,38 @@
-language: haskell
+# Choose a build environment
+dist: xenial
+
+# # Do not choose a language; we provide our own build tools.
+language: generic
 
 sudo: false
 
 cache:
-    apt: true
-    directories:
-        - $HOME/.cabal/
-        - $HOME/.ghc/
+  apt: true
+  directories:
+    - $HOME/.stack
 
 addons:
-    apt:
-        sources:
-            - hvr-ghc
-        packages:
-            - cabal-install-1.24
-            - ghc-8.0.1
-            - lmodern
-            - texlive-latex-base
-            - texlive-latex-recommended
-            - texlive-latex-extra
-            - texlive-fonts-recommended
-            - texlive-fonts-extra
+  apt:
+    sources:
+      - hvr-ghc
+    packages:
+      - lmodern
+      - texlive-latex-base
+      - texlive-latex-recommended
+      - texlive-latex-extra
+      - texlive-fonts-recommended
+      - texlive-fonts-extra
 
 before_install:
- - texconfig font rw
- - export PATH=$HOME/.cabal/bin:/opt/ghc/8.0.1/bin:/opt/cabal/1.24/bin:$PATH
+  - mkdir -p ~/.local/bin
+  - export PATH=$HOME/.local/bin:$PATH
+  - travis_retry curl -L https://get.haskellstack.org/stable/linux-x86_64.tar.gz | tar xz --wildcards --strip-components=1 -C ~/.local/bin '*/stack'
 
 install:
- - cabal --version
- - echo "$(ghc --version) [$(ghc --print-project-git-commit-id 2> /dev/null || echo '?')]"
- - cabal update
- - cabal install --avoid-reinstalls happy alex
- - cabal install --avoid-reinstalls --only-dependencies --constraint="hakyll -previewserver -watchserver -checkexternal" --disable-benchmarks --disable-coverage --disable-documentation --disable-optimization
+  - stack --no-terminal --install-ghc test --only-dependencies
 
 script:
- - cabal configure
- - cabal run build
- - cabal run check
+ - stack --no-terminal run build
+ - stack --no-terminal run check
 
 after_success: ./bin/deploy
